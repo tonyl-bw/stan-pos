@@ -1,59 +1,15 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import { Minus, Plus, Trash2 } from 'lucide-react-native';
+import { View, StyleSheet } from 'react-native';
 import React from 'react';
-// Mock data for cart items
-const CART_ITEMS = [
-  { id: '1', name: 'Coffee', price: 3.99, quantity: 2 },
-  { id: '2', name: 'Sandwich', price: 6.99, quantity: 1 },
-];
+import CartList from '@/components/molecules/CartList';
+import CartDeliveryMethodSelection from '@/components/atoms/CartDeliveryMethod';
+import CartPaymentMethod from '@/components/atoms/CartPaymentMethod';
 
 export default function CartScreen() {
-  const total = CART_ITEMS.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  const renderCartItem = ({ item }: { item: any }) => (
-    <View style={styles.cartItem}>
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-      </View>
-
-      <View style={styles.quantityContainer}>
-        <Pressable style={styles.quantityButton}>
-          <Minus size={20} color="#007AFF" />
-        </Pressable>
-        <Text style={styles.quantity}>{item.quantity}</Text>
-        <Pressable style={styles.quantityButton}>
-          <Plus size={20} color="#007AFF" />
-        </Pressable>
-        <Pressable style={[styles.quantityButton, styles.deleteButton]}>
-          <Trash2 size={20} color="#FF3B30" />
-        </Pressable>
-      </View>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-      <FlashList
-        data={CART_ITEMS}
-        renderItem={renderCartItem}
-        estimatedItemSize={80}
-        contentContainerStyle={styles.cartList}
-      />
-
-      <View style={styles.footer}>
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalAmount}>${total.toFixed(2)}</Text>
-        </View>
-        <Pressable style={styles.checkoutButton}>
-          <Text style={styles.checkoutButtonText}>Checkout</Text>
-        </Pressable>
-      </View>
+      <CartList />
+      <CartDeliveryMethodSelection />
+      <CartPaymentMethod />
     </View>
   );
 }

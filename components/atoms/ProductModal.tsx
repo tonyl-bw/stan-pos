@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { X, Check } from 'lucide-react-native';
+import { X, Check, ShoppingCart } from 'lucide-react-native';
 import { useProductContext } from '@/context/ProductContext';
+import { useCart } from '@/context/CartContext';
 import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetBackdrop,
@@ -16,6 +17,8 @@ export default function ProductModal() {
     closeProductModal,
     bottomSheetModalRef,
   } = useProductContext();
+
+  const { addToCart } = useCart();
 
   // Snap points for the bottom sheet (defines how high it can expand)
   const snapPoints = useMemo(() => ['80%'], []);
@@ -33,6 +36,14 @@ export default function ProductModal() {
       ),
     []
   );
+
+  // Handle add to cart action
+  const handleAddToCart = () => {
+    if (selectedProduct) {
+      addToCart(selectedProduct, selectedIngredients);
+      closeProductModal();
+    }
+  };
 
   // If no product is selected, don't render anything
   if (!selectedProduct) return null;
@@ -78,7 +89,7 @@ export default function ProductModal() {
                 )}
               </View>
               {selectedIngredients.includes(ingredient.ingredientId) && (
-                <Check size={16} color="#007AFF" />
+                <Check size={20} color="#007AFF" />
               )}
             </Pressable>
           ))}
@@ -89,7 +100,8 @@ export default function ProductModal() {
         <Text style={styles.totalPrice}>
           Total: ${calculateTotalPrice().toFixed(2)}
         </Text>
-        <Pressable style={styles.addToCartButton} onPress={closeProductModal}>
+        <Pressable style={styles.addToCartButton} onPress={handleAddToCart}>
+          <ShoppingCart size={20} color="#FFFFFF" style={styles.cartIcon} />
           <Text style={styles.addToCartButtonText}>Add to Cart</Text>
         </Pressable>
       </View>
@@ -132,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     backgroundColor: '#F2F2F7',
     borderRadius: 12,
@@ -171,6 +183,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  cartIcon: {
+    marginRight: 8,
   },
   addToCartButtonText: {
     color: '#FFFFFF',

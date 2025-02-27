@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import { MOCK_PRODUCTS } from '@/mock/product.mock';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { useCart } from './CartContext';
 
 // Define the context type
 interface ProductContextType {
@@ -34,6 +35,7 @@ const ProductContext = createContext<ProductContextType>(
 
 // Context provider component
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
+  const { addToCart } = useCart();
   // Create a ref for the bottom sheet modal
   const bottomSheetModalRef = useRef<BottomSheet>(null);
 
@@ -66,6 +68,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
       // Present the bottom sheet
       bottomSheetModalRef.current?.expand();
+    } else {
+      addToCart(product, selectedIngredients);
     }
   }, []);
 
