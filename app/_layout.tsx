@@ -1,11 +1,8 @@
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import * as eva from '@eva-design/eva';
-import { ApplicationProvider } from '@ui-kitten/components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { CartProvider } from '@/context/CartContext';
+import { SettingsProvider } from '@/context/SettingContext';
+import App from '@/components/app';
 
 declare global {
   interface Window {
@@ -20,15 +17,9 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <CartProvider>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </CartProvider>
-        <StatusBar style="auto" />
-      </ApplicationProvider>
+      <SettingsProvider>
+        <App />
+      </SettingsProvider>
     </GestureHandlerRootView>
   );
 }

@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet, Pressable, Switch } from 'react-native';
 import { ChevronRight, Store, Receipt, Bell, Moon } from 'lucide-react-native';
+import { useSettings } from '@/context/SettingContext';
+import SettingGroupWrapper from '@/components/molecules/SettingGroupWrapper';
+import SettingDarkModeSwitch from '@/components/atoms/SettingDarkModeSwitch';
 
 export default function SettingsScreen() {
+  const { isDarkMode, toggleDarkMode } = useSettings();
   const settingsGroups = [
     {
       title: 'Business Settings',
@@ -12,18 +16,15 @@ export default function SettingsScreen() {
     },
     {
       title: 'App Settings',
-      items: [
-        { icon: Bell, label: 'Notifications', hasSwitch: true },
-        { icon: Moon, label: 'Dark Mode', hasSwitch: true },
-      ],
+      items: [{ icon: Bell, label: 'Notifications', hasSwitch: true }],
     },
   ];
 
-  const renderSettingsGroup = (group, index) => (
+  const renderSettingsGroup = (group: any, index: number) => (
     <View key={index} style={styles.settingsGroup}>
       <Text style={styles.groupTitle}>{group.title}</Text>
       <View style={styles.groupItems}>
-        {group.items.map((item, itemIndex) => (
+        {group.items.map((item: any, itemIndex: number) => (
           <Pressable key={itemIndex} style={styles.settingsItem}>
             <View style={styles.settingsItemLeft}>
               <item.icon size={24} color="#007AFF" />
@@ -45,6 +46,19 @@ export default function SettingsScreen() {
   return (
     <View style={styles.container}>
       {settingsGroups.map((group, index) => renderSettingsGroup(group, index))}
+      <SettingGroupWrapper
+        group={{
+          title: 'Settings',
+          items: [
+            {
+              icon: Moon,
+              label: 'Dark Mode',
+              hasSwitch: true,
+              switchComponent: <SettingDarkModeSwitch />,
+            },
+          ],
+        }}
+      />
     </View>
   );
 }

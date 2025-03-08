@@ -1,20 +1,31 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { useProductContext } from '@/context/ProductContext';
+import { Text, useTheme } from '@ui-kitten/components';
+
 export default function CategoryListItem(props: { category: ProductCategory }) {
   const { category } = props;
   const { selectedCategory, setSelectedCategory } = useProductContext();
+  const theme = useTheme();
   return (
     <Pressable
       style={[
         styles.categoryButton,
-        selectedCategory === category.PK && styles.categoryButtonActive,
+        selectedCategory === category.PK
+          ? {
+              backgroundColor: theme['background-basic-color-4'],
+            }
+          : {
+              backgroundColor: theme['background-basic-color-2'],
+            },
       ]}
       onPress={() => setSelectedCategory(category.PK)}
     >
       <Text
+        category="c2"
         style={[
-          styles.categoryButtonText,
-          selectedCategory === category.PK && styles.categoryButtonTextActive,
+          selectedCategory === category.PK
+            ? { color: theme['text-basic-color'] }
+            : { color: theme['text-hint-color'] },
         ]}
       >
         {category.name}
@@ -30,16 +41,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     marginVertical: 8,
     borderRadius: 16,
-    backgroundColor: '#F2F2F7',
-  },
-  categoryButtonActive: {
-    backgroundColor: '#007AFF',
-  },
-  categoryButtonText: {
-    fontSize: 14,
-    color: '#8E8E93',
-  },
-  categoryButtonTextActive: {
-    color: '#FFFFFF',
   },
 });

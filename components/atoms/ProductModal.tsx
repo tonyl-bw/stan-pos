@@ -21,7 +21,7 @@ export default function ProductModal() {
   const { addToCart } = useCart();
 
   // Snap points for the bottom sheet (defines how high it can expand)
-  const snapPoints = useMemo(() => ['80%'], []);
+  const snapPoints = useMemo(() => ['80%', '100%'], []);
 
   // Render backdrop component
   const renderBackdrop = useMemo(
@@ -53,7 +53,7 @@ export default function ProductModal() {
       ref={bottomSheetModalRef}
       index={0}
       snapPoints={snapPoints}
-      backdropComponent={renderBackdrop}
+      // backdropComponent={renderBackdrop}
       handleIndicatorStyle={styles.indicator}
       backgroundStyle={styles.bottomSheetBackground}
     >
