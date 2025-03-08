@@ -5,20 +5,21 @@ import {
   Settings,
   History,
 } from 'lucide-react-native';
-
+import { useTheme } from '@ui-kitten/components';
 export default function TabLayout() {
+  const theme = useTheme();
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: '#8E8E93',
+        tabBarActiveTintColor: theme['text-primary-color'],
+        tabBarInactiveTintColor: theme['text-hint-color'],
         tabBarStyle: {
           borderTopWidth: 1,
-          borderTopColor: '#E5E5EA',
-          backgroundColor: '#FFFFFF',
+          borderTopColor: theme['border-basic-color-4'],
+          backgroundColor: theme['background-basic-color-1'],
         },
         headerStyle: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: theme['background-basic-color-1'],
         },
         headerShadowVisible: false,
       }}

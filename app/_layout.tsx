@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SettingsProvider } from '@/context/SettingContext';
-import App from '@/components/app';
+import App from '@/components/layout/app';
 
 declare global {
   interface Window {
