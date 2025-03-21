@@ -9,7 +9,7 @@ import React, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define types for cart items
-interface CartItem {
+export interface CartItem {
   id: string;
   productId: string;
   name: string;
@@ -20,7 +20,7 @@ interface CartItem {
   notes?: string;
 }
 
-interface CartItemCustomization {
+export interface CartItemCustomization {
   ingredientId: string;
   name: string;
   action: 'add' | 'remove' | 'reduce' | 'increase';

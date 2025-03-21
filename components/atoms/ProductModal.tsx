@@ -21,7 +21,7 @@ export default function ProductModal() {
   const { addToCart } = useCart();
 
   // Snap points for the bottom sheet (defines how high it can expand)
-  const snapPoints = useMemo(() => ['80%', '100%'], []);
+  const snapPoints = useMemo(() => ['100%'], []);
 
   // Render backdrop component
   const renderBackdrop = useMemo(
@@ -40,7 +40,13 @@ export default function ProductModal() {
   // Handle add to cart action
   const handleAddToCart = () => {
     if (selectedProduct) {
-      addToCart(selectedProduct, selectedIngredients);
+      addToCart(
+        {
+          ...selectedProduct,
+          price: calculateTotalPrice(),
+        },
+        selectedIngredients
+      );
       closeProductModal();
     }
   };
@@ -53,7 +59,7 @@ export default function ProductModal() {
       ref={bottomSheetModalRef}
       index={0}
       snapPoints={snapPoints}
-      // backdropComponent={renderBackdrop}
+      backdropComponent={renderBackdrop}
       handleIndicatorStyle={styles.indicator}
       backgroundStyle={styles.bottomSheetBackground}
     >

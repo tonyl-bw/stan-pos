@@ -19,6 +19,7 @@ interface ProductContextType {
   selectedIngredients: ProductIngredient['ingredientId'][];
   filteredProducts: Product[];
   bottomSheetModalRef: React.RefObject<BottomSheet>;
+  searchQuery: string;
 
   // Functions
   setSelectedCategory: (category: ProductCategory['PK'] | 'All') => void;
@@ -26,6 +27,7 @@ interface ProductContextType {
   handleIngredientToggle: (ingredientId: string) => void;
   calculateTotalPrice: () => number;
   closeProductModal: () => void;
+  setSearchQuery: (query: string) => void;
 }
 
 // Create the context with a default value
@@ -46,15 +48,27 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const [selectedIngredients, setSelectedIngredients] = useState<
     ProductIngredient['ingredientId'][]
   >([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Filter products based on selected category
   const filteredProducts = useMemo(() => {
-    return selectedCategory === 'All'
-      ? MOCK_PRODUCTS
-      : MOCK_PRODUCTS.filter((product) =>
-          product.GSI1PK?.includes(selectedCategory)
-        );
-  }, [selectedCategory]);
+    let products =
+      selectedCategory === 'All'
+        ? MOCK_PRODUCTS
+        : MOCK_PRODUCTS.filter((product) =>
+            product.GSI1PK?.includes(selectedCategory)
+          );
+
+    // Apply search filter if there's a search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      products = products.filter((product) =>
+        product.name.toLowerCase().includes(query)
+      );
+    }
+
+    return products;
+  }, [selectedCategory, searchQuery]);
 
   // Handle product selection
   const handleProductPress = useCallback((product: Product) => {
@@ -117,6 +131,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       handleIngredientToggle,
       calculateTotalPrice,
       closeProductModal,
+      searchQuery,
+      setSearchQuery,
     }),
     [
       selectedCategory,
@@ -124,6 +140,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       selectedIngredients,
       filteredProducts,
       bottomSheetModalRef,
+      searchQuery,
     ]
   );
 

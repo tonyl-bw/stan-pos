@@ -5,7 +5,6 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 import { CartProvider } from '@/context/CartContext';
 import { useSettings } from '@/context/SettingContext';
-import { useTheme } from '@ui-kitten/components';
 import Stack from './stack';
 
 export default function App() {

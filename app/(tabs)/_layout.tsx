@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router';
 import {
-  ShoppingCart,
   LayoutGrid,
   Settings,
   History,
@@ -10,6 +9,7 @@ export default function TabLayout() {
   const theme = useTheme();
   return (
     <Tabs
+      initialRouteName="sell"
       screenOptions={{
         tabBarActiveTintColor: theme['text-primary-color'],
         tabBarInactiveTintColor: theme['text-hint-color'],
@@ -21,24 +21,16 @@ export default function TabLayout() {
         headerStyle: {
           backgroundColor: theme['background-basic-color-1'],
         },
+        headerShown: false,
         headerShadowVisible: false,
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="sell"
         options={{
-          title: 'Products',
+          title: 'Sell',
           tabBarIcon: ({ color, size }) => (
             <LayoutGrid size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="cart"
-        options={{
-          title: 'Cart',
-          tabBarIcon: ({ color, size }) => (
-            <ShoppingCart size={size} color={color} />
           ),
         }}
       />

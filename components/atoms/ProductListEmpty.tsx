@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { PackageOpen } from 'lucide-react-native';
-import { Text, useTheme } from '@ui-kitten/components';
+import { Text, useTheme, useStyleSheet } from '@ui-kitten/components';
 interface EmptyProductListProps {
   message?: string;
 }
@@ -10,9 +10,10 @@ export default function EmptyProductList({
   message = 'No products available',
 }: EmptyProductListProps) {
   const theme = useTheme();
+  const styles = useStyleSheet(themedStyles) as any;
   return (
     <View style={styles.container}>
-      <PackageOpen size={80} color="#CCCCCC" style={styles.icon} />
+      <PackageOpen size={80} color={theme['text-hint-color']} style={styles.icon} />
       <Text category="h6" style={{ paddingBottom: 8 }}>
         Nothing to show
       </Text>
@@ -23,13 +24,13 @@ export default function EmptyProductList({
   );
 }
 
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: 'background-basic-color-4',
     minHeight: 300,
   },
   icon: {

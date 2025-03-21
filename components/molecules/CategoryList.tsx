@@ -3,20 +3,12 @@ import { View, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { MOCK_CATEGORIES } from '@/mock/category.mock';
 import CategoryListItem from '../atoms/CategoryListItem';
-import { useTheme } from '@ui-kitten/components';
+import { useStyleSheet } from '@ui-kitten/components';
 
 export default function CategoryList() {
-  const theme = useTheme();
+  const styles = useStyleSheet(themedStyles) as any;
   return (
-    <View
-      style={[
-        styles.categoryContainer,
-        {
-          backgroundColor: theme['background-basic-color-1'],
-          borderBottomColor: theme['border-basic-color-4'],
-        },
-      ]}
-    >
+    <View style={styles.categoryContainer}>
       <FlashList
         data={MOCK_CATEGORIES}
         extraData={MOCK_CATEGORIES}
@@ -29,10 +21,12 @@ export default function CategoryList() {
   );
 }
 
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
   categoryContainer: {
     height: 50,
     borderBottomWidth: 1,
     paddingHorizontal: 8,
+    backgroundColor: 'background-basic-color-4',
+    borderBottomColor: 'border-basic-color-4',
   },
 });

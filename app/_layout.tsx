@@ -3,6 +3,7 @@ import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SettingsProvider } from '@/context/SettingContext';
 import App from '@/components/layout/app';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 declare global {
   interface Window {
@@ -17,9 +18,11 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SettingsProvider>
-        <App />
-      </SettingsProvider>
+      <BottomSheetModalProvider>
+        <SettingsProvider>
+          <App />
+        </SettingsProvider>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }
