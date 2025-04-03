@@ -47,14 +47,20 @@ export const OptionSection: React.FC<OptionSectionProps> = ({
               ]}
               onPress={() => onOptionSelect(option.id)}
             >
-              <IconComponent
-                size={24}
-                color={
-                  selectedOption === option.id
-                    ? theme['text-primary-color']
-                    : theme['text-hint-color']
-                }
-              />
+              <View
+                style={{
+                  alignSelf: 'center',
+                }}
+              >
+                <IconComponent
+                  size={24}
+                  color={
+                    selectedOption === option.id
+                      ? theme['text-primary-color']
+                      : theme['text-hint-color']
+                  }
+                />
+              </View>
               <Text
                 category="s1"
                 style={[

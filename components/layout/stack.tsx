@@ -7,6 +7,7 @@ export default function Stack() {
         headerShown: false,
       }}
     >
+      <ExpoStack.Screen name="(tabs)" />
       <ExpoStack.Screen name="+not-found" />
     </ExpoStack>
   );

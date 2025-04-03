@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import {
@@ -9,11 +9,11 @@ import {
 } from '@/constant/checkout.constant';
 import { OptionSection } from '@/components/molecules/OptionSelection';
 import { useCart } from '@/context/CartContext';
-import { useTheme, useStyleSheet, StyleService } from '@ui-kitten/components';
+import { useStyleSheet, StyleService } from '@ui-kitten/components';
 import Button from '@/components/ui/Button';
+import Header from '@/components/layout/Header';
 
 export default function CheckoutScreen() {
-  const theme = useTheme();
   const styles = useStyleSheet(themedStyles) as any;
   const [paymentMethod, setPaymentMethod] = useState(DEFAULT_PAYMENT_METHOD);
   const [deliveryMethod, setDeliveryMethod] = useState(DEFAULT_DELIVERY_METHOD);
@@ -30,48 +30,51 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Payment Method */}
-      <OptionSection
-        title={CHECKOUT_PAYMENT_METHODS.title}
-        options={CHECKOUT_PAYMENT_METHODS.options}
-        selectedOption={paymentMethod}
-        onOptionSelect={setPaymentMethod}
-      />
+    <SafeAreaView style={{ flex: 1 }}>
+      <Header title="Checkout" />
+      <View style={styles.container}>
+        {/* Payment Method */}
+        <OptionSection
+          title={CHECKOUT_PAYMENT_METHODS.title}
+          options={CHECKOUT_PAYMENT_METHODS.options}
+          selectedOption={paymentMethod}
+          onOptionSelect={setPaymentMethod}
+        />
 
-      {/* Delivery Method */}
-      <OptionSection
-        title={CHECKOUT_DELIVERY_METHODS.title}
-        options={CHECKOUT_DELIVERY_METHODS.options}
-        selectedOption={deliveryMethod}
-        onOptionSelect={setDeliveryMethod}
-      />
+        {/* Delivery Method */}
+        <OptionSection
+          title={CHECKOUT_DELIVERY_METHODS.title}
+          options={CHECKOUT_DELIVERY_METHODS.options}
+          selectedOption={deliveryMethod}
+          onOptionSelect={setDeliveryMethod}
+        />
 
-      <View style={styles.summary}>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Subtotal</Text>
-          <Text style={styles.summaryValue}>${cartTotal.toFixed(2)}</Text>
+        <View style={styles.summary}>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Subtotal</Text>
+            <Text style={styles.summaryValue}>${cartTotal.toFixed(2)}</Text>
+          </View>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Tax (15%)</Text>
+            <Text style={styles.summaryValue}>
+              ${(cartTotal * 0.15).toFixed(2)}
+            </Text>
+          </View>
+          <View style={[styles.summaryRow, styles.totalRow]}>
+            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalValue}>${cartTotal.toFixed(2)}</Text>
+          </View>
         </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Tax (15%)</Text>
-          <Text style={styles.summaryValue}>
-            ${(cartTotal * 0.15).toFixed(2)}
-          </Text>
-        </View>
-        <View style={[styles.summaryRow, styles.totalRow]}>
-          <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalValue}>${cartTotal.toFixed(2)}</Text>
-        </View>
+
+        <Button
+          size="large"
+          onPress={handleConfirmOrder}
+          disabled={!paymentMethod || !deliveryMethod}
+        >
+          Confirm Order
+        </Button>
       </View>
-
-      <Button
-        size="large"
-        onPress={handleConfirmOrder}
-        disabled={!paymentMethod || !deliveryMethod}
-      >
-        Confirm Order
-      </Button>
-    </View>
+    </SafeAreaView>
   );
 }
 

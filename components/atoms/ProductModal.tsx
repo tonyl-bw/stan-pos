@@ -1,12 +1,19 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { X, Check, ShoppingCart } from 'lucide-react-native';
+import { View, Pressable } from 'react-native';
+import { X, Check } from 'lucide-react-native';
 import { useProductContext } from '@/context/ProductContext';
 import { useCart } from '@/context/CartContext';
 import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
+import {
+  StyleService,
+  useStyleSheet,
+  useTheme,
+  Text,
+} from '@ui-kitten/components';
+import Button from '../ui/Button';
 
 export default function ProductModal() {
   const {
@@ -19,7 +26,8 @@ export default function ProductModal() {
   } = useProductContext();
 
   const { addToCart } = useCart();
-
+  const styles = useStyleSheet(themedStyles) as any;
+  const theme = useTheme();
   // Snap points for the bottom sheet (defines how high it can expand)
   const snapPoints = useMemo(() => ['100%'], []);
 
@@ -64,9 +72,9 @@ export default function ProductModal() {
       backgroundStyle={styles.bottomSheetBackground}
     >
       <View style={styles.modalHeader}>
-        <Text style={styles.modalTitle}>{selectedProduct.name}</Text>
+        <Text category="h6">{selectedProduct.name}</Text>
         <Pressable style={styles.closeButton} onPress={closeProductModal}>
-          <X size={24} color="#000000" />
+          <X size={24} color={theme['color-basic-default']} />
         </Pressable>
       </View>
 
@@ -84,18 +92,32 @@ export default function ProductModal() {
               disabled={!ingredient.isOptional}
             >
               <View style={styles.ingredientInfo}>
-                <Text style={styles.ingredientName}>
+                <Text
+                  category="s1"
+                  style={[
+                    styles.ingredientName,
+                    selectedIngredients.includes(ingredient.ingredientId) &&
+                      styles.ingredientNameSelected,
+                  ]}
+                >
                   {ingredient.name}
-                  {!ingredient.isOptional && ' *'}
+                  {ingredient.isOptional ? '' : ' *'}
                 </Text>
                 {ingredient.additionalCost > 0 && (
-                  <Text style={styles.ingredientPrice}>
+                  <Text
+                    category="c1"
+                    style={[
+                      styles.ingredientPrice,
+                      selectedIngredients.includes(ingredient.ingredientId) &&
+                        styles.ingredientPriceSelected,
+                    ]}
+                  >
                     +${ingredient.additionalCost.toFixed(2)}
                   </Text>
                 )}
               </View>
               {selectedIngredients.includes(ingredient.ingredientId) && (
-                <Check size={20} color="#007AFF" />
+                <Check size={20} color="#FFFFFF" />
               )}
             </Pressable>
           ))}
@@ -106,18 +128,17 @@ export default function ProductModal() {
         <Text style={styles.totalPrice}>
           Total: ${calculateTotalPrice().toFixed(2)}
         </Text>
-        <Pressable style={styles.addToCartButton} onPress={handleAddToCart}>
-          <ShoppingCart size={20} color="#FFFFFF" style={styles.cartIcon} />
-          <Text style={styles.addToCartButtonText}>Add to Cart</Text>
-        </Pressable>
+        <Button size="large" onPress={handleAddToCart}>
+          Add to Cart
+        </Button>
       </View>
     </BottomSheet>
   );
 }
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   bottomSheetBackground: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'background-basic-color-3',
   },
   indicator: {
     backgroundColor: '#CCCCCC',
@@ -138,7 +159,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#000000',
+    color: 'color-basic-default',
   },
   closeButton: {
     padding: 8,
@@ -152,23 +173,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: 'color-primary-100',
     borderRadius: 12,
   },
   ingredientSelected: {
-    backgroundColor: '#E1F0FF',
+    backgroundColor: 'color-primary-500',
   },
   ingredientInfo: {
     flex: 1,
   },
   ingredientName: {
-    fontSize: 16,
-    color: '#000000',
+    color: 'color-basic-900',
+  },
+  ingredientNameSelected: {
+    color: 'color-basic-default',
   },
   ingredientPrice: {
-    fontSize: 14,
-    color: '#8E8E93',
+    color: 'color-basic-900',
     marginTop: 2,
+  },
+  ingredientPriceSelected: {
+    color: 'color-basic-default',
   },
   modalFooter: {
     marginTop: 20,
@@ -181,23 +206,7 @@ const styles = StyleSheet.create({
   totalPrice: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#000000',
+    color: 'color-basic-default',
     marginBottom: 16,
-  },
-  addToCartButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  cartIcon: {
-    marginRight: 8,
-  },
-  addToCartButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });

@@ -1,5 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
+import { StyleService, useStyleSheet, Text } from '@ui-kitten/components';
+import { OrderStatusBadge } from '@/components/atoms/OrderStatusBadge';
 
 // Mock data for orders
 const ORDERS = [
@@ -26,22 +28,35 @@ const ORDERS = [
 ];
 
 export default function OrdersScreen() {
-  const renderOrderItem = ({ item }) => (
-    <View style={styles.orderCard}>
+  const styles = useStyleSheet(themedStyles) as any;
+  const colNum = 4;
+  const gap = 16;
+  const renderOrderItem = ({ item, index }: { item: any; index: number }) => (
+    <View
+      style={[
+        styles.orderCard,
+        {
+          marginLeft: index % colNum === 0 ? gap : 0,
+          marginRight: index % 1 === 0 ? gap : 0,
+          marginBottom: index % 1 === 0 ? gap : 0,
+          marginTop: index < colNum ? gap : 0,
+        },
+      ]}
+    >
       <View style={styles.orderHeader}>
-        <Text style={styles.orderDate}>
+        <Text category="label" style={styles.orderDate}>
           {new Date(item.date).toLocaleDateString()}
         </Text>
-        <Text style={styles.orderStatus}>{item.status}</Text>
+        <OrderStatusBadge status={item.status.toLowerCase()} />
       </View>
 
       <View style={styles.orderItems}>
-        {item.items.map((orderItem, index) => (
+        {item.items.map((orderItem: any, index: number) => (
           <View key={index} style={styles.orderItemRow}>
-            <Text style={styles.itemName}>
+            <Text category="p1">
               {orderItem.quantity}x {orderItem.name}
             </Text>
-            <Text style={styles.itemPrice}>
+            <Text category="p1">
               ${(orderItem.price * orderItem.quantity).toFixed(2)}
             </Text>
           </View>
@@ -49,8 +64,8 @@ export default function OrdersScreen() {
       </View>
 
       <View style={styles.orderTotal}>
-        <Text style={styles.totalLabel}>Total</Text>
-        <Text style={styles.totalAmount}>${item.total.toFixed(2)}</Text>
+        <Text category="s1">Total</Text>
+        <Text category="s1">${item.total.toFixed(2)}</Text>
       </View>
     </View>
   );
@@ -62,24 +77,25 @@ export default function OrdersScreen() {
         renderItem={renderOrderItem}
         estimatedItemSize={150}
         contentContainerStyle={styles.ordersList}
+        numColumns={4}
       />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: 'background-basic-color-4',
   },
   ordersList: {
     padding: 16,
   },
   orderCard: {
-    backgroundColor: '#FFFFFF',
+    flexGrow: 1,
+    backgroundColor: 'background-basic-color-1',
     borderRadius: 12,
     padding: 16,
-    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -98,16 +114,11 @@ const styles = StyleSheet.create({
   orderDate: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000000',
-  },
-  orderStatus: {
-    fontSize: 14,
-    color: '#34C759',
-    fontWeight: '500',
+    // color: 'color-basic-default',
   },
   orderItems: {
     borderTopWidth: 1,
-    borderTopColor: '#E5E5EA',
+    borderTopColor: 'color-basic-default',
     paddingTop: 12,
     gap: 8,
   },
@@ -116,31 +127,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  itemName: {
-    fontSize: 14,
-    color: '#000000',
-  },
-  itemPrice: {
-    fontSize: 14,
-    color: '#8E8E93',
-  },
   orderTotal: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#E5E5EA',
+    borderTopColor: 'color-basic-default',
     paddingTop: 12,
-  },
-  totalLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
-  },
-  totalAmount: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#007AFF',
   },
 });
