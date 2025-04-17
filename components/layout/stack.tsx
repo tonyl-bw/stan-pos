@@ -8,6 +8,7 @@ export default function Stack() {
       }}
     >
       <ExpoStack.Screen name="(tabs)" />
+      <ExpoStack.Screen name="checkout" />
       <ExpoStack.Screen name="+not-found" />
     </ExpoStack>
   );

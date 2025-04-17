@@ -5,7 +5,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 import { CartProvider } from '@/context/CartContext';
 import { useSettings } from '@/context/SettingContext';
-import Stack from './stack';
+import Stack from './Stack';
 
 export default function App() {
   const { isDarkMode } = useSettings();

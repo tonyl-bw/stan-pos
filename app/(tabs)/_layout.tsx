@@ -9,7 +9,6 @@ export default function TabLayout() {
   const theme = useTheme();
   return (
     <Tabs
-      initialRouteName="sell"
       screenOptions={{
         tabBarActiveTintColor: theme['text-primary-color'],
         tabBarInactiveTintColor: theme['text-hint-color'],
@@ -26,7 +25,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="sell"
+        name="index"
         options={{
           title: 'Sell',
           tabBarIcon: ({ color, size }) => (

@@ -16,8 +16,7 @@ alwaysApply: true
   - Follow ui-kitten official documentation for UI components: https://akveo.github.io/react-native-ui-kitten/docs/components/components-overview
 
   Naming Conventions
-  - Use lowercase with dashes for directories (e.g., components/auth-wizard).
-  - Use CamelCase for components files in components directory (e.g., components/ProductModal.tsx).
+  - Use PascalCase for components files in components directory (e.g., components/ProductModal.tsx).
   - use lowercase for app directory
   - Favor named exports for components.
 

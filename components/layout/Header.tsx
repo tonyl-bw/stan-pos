@@ -21,7 +21,7 @@ export default function Header({ title }: HeaderProps) {
       <View style={styles.left as ViewStyle}>
         {router.canGoBack() && (
           <Pressable onPress={() => router.back()}>
-            <ArrowLeft size={20} />
+            <ArrowLeft size={24} />
           </Pressable>
         )}
         <Text category="s1">{title}</Text>
@@ -34,6 +34,7 @@ const themedStyles = StyleService.create({
   container: {
     paddingHorizontal: 16,
     paddingVertical: 12,
+    backgroundColor: 'background-basic-color-4',
   },
   left: {
     flexDirection: 'row',

@@ -31,7 +31,7 @@ export default function CheckoutScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Header title="Checkout" />
+      <Header title="" />
       <View style={styles.container}>
         {/* Payment Method */}
         <OptionSection

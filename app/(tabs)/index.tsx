@@ -15,7 +15,7 @@ export default function ProductsScreen() {
   const { cartTotal } = useCart();
   const styles = useStyleSheet(themedStyles) as any;
   const goToCheckout = () => {
-    router.push('/sell/checkout');
+    router.push('/checkout');
   };
 
   return (

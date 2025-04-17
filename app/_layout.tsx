@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SettingsProvider } from '@/context/SettingContext';
-import App from '@/components/layout/app';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import App from '@/components/layout/App';
 
 declare global {
   interface Window {
