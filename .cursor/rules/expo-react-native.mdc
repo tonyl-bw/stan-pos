@@ -40,6 +40,7 @@ alwaysApply: true
   - Ensure high accessibility (a11y) standards using ARIA roles and native accessibility props.
   - Use lucide-react-native for icon
   - Leverage react-native-reanimated and react-native-gesture-handler for performant animations and gestures.
+  - Always use `StyleService.create()` from ui-kitten for creating component styles
 
   Safe Area Management
   - Use SafeAreaProvider from react-native-safe-area-context to manage safe areas globally in your app.

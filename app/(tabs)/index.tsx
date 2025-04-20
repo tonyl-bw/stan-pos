@@ -10,6 +10,7 @@ import { useCart } from '@/context/CartContext';
 import Button from '@/components/ui/Button';
 import { router } from 'expo-router';
 import { ProductSearch } from '@/components/atoms/ProductSearch';
+import ProductListItemModal from '@/components/atoms/ProductListItemModal';
 
 export default function ProductsScreen() {
   const { cartTotal } = useCart();
@@ -27,6 +28,7 @@ export default function ProductsScreen() {
           <CategoryList />
           <ProductList />
           <ProductModal />
+          <ProductListItemModal />
         </View>
 
         {/* Right side - Cart */}

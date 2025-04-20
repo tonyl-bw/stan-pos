@@ -34,20 +34,19 @@ const themedStyles = StyleSheet.create({
   categoryButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    marginHorizontal: 4,
-    marginVertical: 8,
-    borderRadius: 16,
+    borderRadius: 24,
+    marginRight: 12,
   },
   categoryButtonActive: {
-    backgroundColor: 'background-basic-color-1',
+    backgroundColor: 'text-primary-color',
   },
   categoryButtonInactive: {
-    backgroundColor: 'background-basic-color-2',
+    backgroundColor: 'background-basic-color-3',
   },
   categoryButtonTextActive: {
-    color: 'text-basic-color',
+    color: 'text-control-color',
   },
   categoryButtonTextInactive: {
-    color: 'text-hint-color',
+    color: 'text-basic-color',
   },
 });

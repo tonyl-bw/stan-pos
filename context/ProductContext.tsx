@@ -21,6 +21,10 @@ interface ProductContextType {
   bottomSheetModalRef: React.RefObject<BottomSheet>;
   searchQuery: string;
 
+  // Modal state
+  visible: boolean;
+  handleCloseModal: () => void;
+
   // Functions
   setSelectedCategory: (category: ProductCategory['PK'] | 'All') => void;
   handleProductPress: (product: Product) => void;
@@ -38,6 +42,10 @@ const ProductContext = createContext<ProductContextType>(
 // Context provider component
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const { addToCart } = useCart();
+  // Modal state
+  const [visible, setVisible] = useState(false);
+  const handleCloseModal = () => setVisible(false);
+
   // Create a ref for the bottom sheet modal
   const bottomSheetModalRef = useRef<BottomSheet>(null);
 
@@ -81,7 +89,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       );
 
       // Present the bottom sheet
-      bottomSheetModalRef.current?.expand();
+      // bottomSheetModalRef.current?.expand();
+      setVisible(true);
     } else {
       addToCart(product, selectedIngredients);
     }
@@ -133,6 +142,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       closeProductModal,
       searchQuery,
       setSearchQuery,
+      visible,
+      handleCloseModal,
     }),
     [
       selectedCategory,
@@ -141,6 +152,8 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       filteredProducts,
       bottomSheetModalRef,
       searchQuery,
+      visible,
+      handleCloseModal,
     ]
   );
 

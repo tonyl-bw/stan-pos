@@ -23,10 +23,10 @@ export default function CategoryList() {
 
 const themedStyles = StyleSheet.create({
   categoryContainer: {
-    height: 50,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
     borderBottomWidth: 1,
-    paddingHorizontal: 8,
-    backgroundColor: 'background-basic-color-4',
+    backgroundColor: 'background-basic-color-1',
     borderBottomColor: 'border-basic-color-4',
   },
 });

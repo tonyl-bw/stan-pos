@@ -179,6 +179,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       selectedIngredients: ProductIngredient['ingredientId'][],
       notes?: string
     ) => {
+      console.log('product', product);
+      console.log('selectedIngredients', selectedIngredients);
       const customizations = createCustomizationsFromSelectedIngredients(
         product,
         selectedIngredients
@@ -269,7 +271,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       return prevItems
         .map((item) => {
           if (item.id === cartItemId) {
-            const newQuantity = Math.max(1, item.quantity - 1);
+            const newQuantity = item.quantity - 1;
             return {
               ...item,
               quantity: newQuantity,

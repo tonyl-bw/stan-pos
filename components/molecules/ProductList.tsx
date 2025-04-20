@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useProductContext } from '@/context/ProductContext';
 import ProductListEmpty from '../atoms/ProductListEmpty';
@@ -10,7 +10,7 @@ export default function ProductList() {
   const styles = useStyleSheet(themedStyles) as any;
 
   const renderProduct = ({ item }: { item: Product }) => (
-    <Pressable
+    <TouchableOpacity
       style={styles.productCard}
       onPress={() => handleProductPress(item)}
     >
@@ -25,7 +25,7 @@ export default function ProductList() {
           </Text>
         )}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 
   return (
@@ -50,15 +50,9 @@ const themedStyles = StyleSheet.create({
     margin: 8,
     borderRadius: 12,
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
     backgroundColor: 'background-basic-color-1',
+    borderWidth: 1,
+    borderColor: 'border-basic-color-4',
   },
   productInfo: {
     gap: 4,

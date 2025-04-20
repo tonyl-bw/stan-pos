@@ -1,6 +1,6 @@
 import { Minus, Plus, Trash2 } from 'lucide-react-native';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { Text, useStyleSheet } from '@ui-kitten/components';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import {
   useCart,
   CartItem,
@@ -19,13 +19,43 @@ export function CartListItem({ item }: CartListItemProps) {
     removeFromCart,
   } = useCart();
   const styles = useStyleSheet(themedStyles) as any;
+  const theme = useTheme();
 
   return (
     <View style={styles.cartItem}>
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.itemInfo}>
+          <Text category="s1" style={styles.itemName}>
+            {item.name}
+          </Text>
+          <Text category="p1" style={styles.itemPrice}>
+            ${item.price.toFixed(2)}
+          </Text>
+        </View>
+
+        {/* Item notes */}
+        {item.notes && <Text style={styles.itemNotes}>Note: {item.notes}</Text>}
+
+        <View style={styles.quantityContainer}>
+          <TouchableOpacity
+            style={styles.quantityButton}
+            onPress={() => decreaseQuantity(item.id)}
+          >
+            <Minus size={14} color={theme['text-basic-color']} />
+          </TouchableOpacity>
+
+          <Text style={styles.quantity}>{item.quantity}</Text>
+
+          <TouchableOpacity
+            style={styles.quantityButton}
+            onPress={() => increaseQuantity(item.id)}
+          >
+            <Plus size={14} color={theme['text-basic-color']} />
+          </TouchableOpacity>
+        </View>
       </View>
+
+      {/* Customizations */}
 
       {/* Item customizations */}
       {item.customizations && item.customizations.length > 0 && (
@@ -44,35 +74,21 @@ export function CartListItem({ item }: CartListItemProps) {
         </View>
       )}
 
-      {/* Item notes */}
-      {item.notes && <Text style={styles.itemNotes}>Note: {item.notes}</Text>}
-
-      <View style={styles.quantityContainer}>
-        <Pressable
-          style={styles.quantityButton}
-          onPress={() => decreaseQuantity(item.id)}
-          disabled={checkoutInProgress}
-        >
-          <Minus size={20} color="#007AFF" />
-        </Pressable>
-
-        <Text style={styles.quantity}>{item.quantity}</Text>
-
-        <Pressable
-          style={styles.quantityButton}
-          onPress={() => increaseQuantity(item.id)}
-          disabled={checkoutInProgress}
-        >
-          <Plus size={20} color="#007AFF" />
-        </Pressable>
-
-        <Pressable
-          style={[styles.quantityButton, styles.deleteButton]}
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={styles.removeButton}
           onPress={() => removeFromCart(item.id)}
-          disabled={checkoutInProgress}
         >
-          <Trash2 size={20} color="#FF3B30" />
-        </Pressable>
+          <Trash2 size={14} color={theme['color-basic-600']} />
+          <Text category="p1" style={styles.removeText}>
+            Remove
+          </Text>
+        </TouchableOpacity>
+
+        <Text category="s1" style={styles.totalPrice}>
+          ${(item.price * item.quantity).toFixed(2)}
+        </Text>
       </View>
     </View>
   );
@@ -82,35 +98,30 @@ const themedStyles = StyleSheet.create({
   cartItem: {
     backgroundColor: 'background-basic-color-1',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: 'border-basic-color-4',
   },
-  itemInfo: {
+  mainContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+  },
+  itemInfo: {
+    flex: 1,
+    marginRight: 8,
   },
   itemName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'Inter-Medium',
     color: 'text-basic-color',
+    marginBottom: 2,
   },
   itemPrice: {
-    fontSize: 16,
     color: 'text-primary-color',
-    fontWeight: '500',
+    fontFamily: 'Inter-SemiBold',
   },
   customizationContainer: {
-    marginBottom: 12,
+    marginVertical: 8,
   },
   customizationText: {
     fontSize: 14,
@@ -126,23 +137,44 @@ const themedStyles = StyleSheet.create({
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
   },
   quantityButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 6,
     backgroundColor: 'background-basic-color-2',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'border-basic-color-4',
   },
   deleteButton: {
     marginLeft: 'auto',
   },
   quantity: {
-    fontSize: 16,
-    fontWeight: '500',
-    minWidth: 24,
+    width: 32,
     textAlign: 'center',
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: 'text-basic-color',
+  },
+  footer: {
+    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'border-basic-color-4',
+  },
+  removeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  removeText: {
+    marginLeft: 4,
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: 'text-hint-color',
   },
 });

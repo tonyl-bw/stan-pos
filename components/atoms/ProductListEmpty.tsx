@@ -30,7 +30,7 @@ const themedStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: 'background-basic-color-4',
+    backgroundColor: 'background-basic-color-2',
     minHeight: 300,
   },
   icon: {
