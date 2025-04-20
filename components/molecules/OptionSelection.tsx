@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import {
   Text,
   Card,
@@ -39,7 +39,7 @@ export const OptionSection: React.FC<OptionSectionProps> = ({
         {options.map((option) => {
           const IconComponent = option.icon;
           return (
-            <Card
+            <TouchableOpacity
               key={option.id}
               style={[
                 styles.optionCard,
@@ -47,22 +47,16 @@ export const OptionSection: React.FC<OptionSectionProps> = ({
               ]}
               onPress={() => onOptionSelect(option.id)}
             >
-              <View
-                style={{
-                  alignSelf: 'center',
-                }}
-              >
-                <IconComponent
-                  size={24}
-                  color={
-                    selectedOption === option.id
-                      ? theme['text-primary-color']
-                      : theme['text-hint-color']
-                  }
-                />
-              </View>
+              <IconComponent
+                size={24}
+                color={
+                  selectedOption === option.id
+                    ? theme['text-primary-color']
+                    : theme['text-hint-color']
+                }
+              />
               <Text
-                category="s1"
+                category="p1"
                 style={[
                   styles.optionText,
                   selectedOption === option.id && styles.optionTextSelected,
@@ -70,7 +64,7 @@ export const OptionSection: React.FC<OptionSectionProps> = ({
               >
                 {option.label}
               </Text>
-            </Card>
+            </TouchableOpacity>
           );
         })}
       </View>
@@ -81,9 +75,25 @@ export const OptionSection: React.FC<OptionSectionProps> = ({
 const themedStyles = StyleService.create({
   section: {
     marginBottom: 24,
+    borderRadius: 12,
+    backgroundColor: 'background-basic-color-1',
+    padding: 16,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 2,
+      },
+    }),
   },
   sectionTitle: {
     marginBottom: 16,
+    fontFamily: 'Inter-SemiBold',
   },
   optionsContainer: {
     flexDirection: 'row',
@@ -91,23 +101,26 @@ const themedStyles = StyleService.create({
   },
   optionCard: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: 'border-basic-color-4',
-  },
-  optionSelected: {
-    borderColor: 'border-basic-color-4',
+    borderColor: 'border-basic-color-5',
     backgroundColor: 'background-basic-color-1',
   },
+  optionSelected: {
+    borderColor: 'border-primary-color-1',
+    backgroundColor: 'color-primary-100',
+  },
   optionText: {
+    fontFamily: 'Inter-Medium',
     color: 'text-hint-color',
-    marginTop: 8,
     textAlign: 'center',
   },
   optionTextSelected: {
-    color: '#007AFF',
+    color: 'text-primary-color',
   },
 });

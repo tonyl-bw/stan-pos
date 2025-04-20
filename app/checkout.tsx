@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, SafeAreaView, Platform } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import {
@@ -9,12 +9,20 @@ import {
 } from '@/constant/checkout.constant';
 import { OptionSection } from '@/components/molecules/OptionSelection';
 import { useCart } from '@/context/CartContext';
-import { useStyleSheet, StyleService } from '@ui-kitten/components';
+import {
+  useStyleSheet,
+  StyleService,
+  useTheme,
+  Text,
+} from '@ui-kitten/components';
 import Button from '@/components/ui/Button';
 import Header from '@/components/layout/Header';
+import { ArrowRight } from 'lucide-react-native';
+import SummaryLabel from '@/components/atoms/SummaryLabel';
 
 export default function CheckoutScreen() {
   const styles = useStyleSheet(themedStyles) as any;
+  const theme = useTheme();
   const [paymentMethod, setPaymentMethod] = useState(DEFAULT_PAYMENT_METHOD);
   const [deliveryMethod, setDeliveryMethod] = useState(DEFAULT_DELIVERY_METHOD);
 
@@ -26,16 +34,12 @@ export default function CheckoutScreen() {
       return;
     }
     // Handle order confirmation
-    router.replace('/(tabs)/orders');
+    router.replace('/orders');
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Header
-        onCartPress={() => {}}
-        onMenuToggle={() => {}}
-        onNavigate={() => {}}
-      />
+      <Header />
       <View style={styles.container}>
         {/* Payment Method */}
         <OptionSection
@@ -55,25 +59,30 @@ export default function CheckoutScreen() {
 
         <View style={styles.summary}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Subtotal</Text>
-            <Text style={styles.summaryValue}>${cartTotal.toFixed(2)}</Text>
+            <SummaryLabel label="Subtotal" />
+            <Text category="s1">${cartTotal.toFixed(2)}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Tax (15%)</Text>
-            <Text style={styles.summaryValue}>
-              ${(cartTotal * 0.15).toFixed(2)}
-            </Text>
+            <SummaryLabel label="Tax (15%)" />
+            <Text category="s1">${(cartTotal * 0.15).toFixed(2)}</Text>
           </View>
           <View style={[styles.summaryRow, styles.totalRow]}>
-            <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>${cartTotal.toFixed(2)}</Text>
+            <Text category="s1" style={styles.totalLabel}>
+              Total
+            </Text>
+            <Text category="s1" style={styles.totalValue}>
+              ${cartTotal.toFixed(2)}
+            </Text>
           </View>
         </View>
-
+      </View>
+      <View style={styles.footer}>
         <Button
-          size="large"
           onPress={handleConfirmOrder}
           disabled={!paymentMethod || !deliveryMethod}
+          accessoryRight={() => (
+            <ArrowRight size={20} color={theme['text-alternate-color']} />
+          )}
         >
           Confirm Order
         </Button>
@@ -85,7 +94,7 @@ export default function CheckoutScreen() {
 const themedStyles = StyleService.create({
   container: {
     flex: 1,
-    backgroundColor: 'background-basic-color-4',
+    backgroundColor: 'background-basic-color-2',
     padding: 16,
   },
   section: {
@@ -98,20 +107,23 @@ const themedStyles = StyleService.create({
     marginTop: 'auto',
     marginBottom: 24,
     gap: 12,
+    ...Platform.select({
+      web: {
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      },
+      default: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 2,
+      },
+    }),
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  summaryLabel: {
-    fontSize: 16,
-    color: 'text-hint-color',
-  },
-  summaryValue: {
-    fontSize: 16,
-    color: 'text-basic-color',
-    fontWeight: '500',
   },
   totalRow: {
     marginTop: 8,
@@ -126,7 +138,6 @@ const themedStyles = StyleService.create({
   },
   totalValue: {
     fontSize: 24,
-    fontWeight: '700',
     color: 'text-primary-color',
   },
   confirmButton: {
@@ -142,5 +153,12 @@ const themedStyles = StyleService.create({
     color: 'text-basic-color',
     fontSize: 18,
     fontWeight: '600',
+  },
+
+  footer: {
+    padding: 16,
+    backgroundColor: 'background-basic-color-1',
+    borderTopWidth: 1,
+    borderTopColor: 'border-basic-color-4',
   },
 });

@@ -10,6 +10,7 @@ import {
   Inter_500Medium,
   Inter_600SemiBold,
   Inter_700Bold,
+  Inter_800ExtraBold,
 } from '@expo-google-fonts/inter';
 import { SplashScreen } from 'expo-router';
 import { ActivityIndicator } from 'react-native';
@@ -34,6 +35,7 @@ export default function RootLayout() {
     'Inter-Medium': Inter_500Medium,
     'Inter-SemiBold': Inter_600SemiBold,
     'Inter-Bold': Inter_700Bold,
+    'Inter-ExtraBold': Inter_800ExtraBold,
   });
 
   // Hide splash screen once fonts are loaded

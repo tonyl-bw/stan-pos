@@ -1,7 +1,8 @@
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { StyleService, useStyleSheet, Text } from '@ui-kitten/components';
 import { OrderStatusBadge } from '@/components/atoms/OrderStatusBadge';
+import Header from '@/components/layout/Header';
 
 // Mock data for orders
 const ORDERS = [
@@ -71,15 +72,18 @@ export default function OrdersScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <FlashList
-        data={ORDERS}
-        renderItem={renderOrderItem}
-        estimatedItemSize={150}
-        contentContainerStyle={styles.ordersList}
-        numColumns={4}
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Header />
+      <View style={styles.container}>
+        <FlashList
+          data={ORDERS}
+          renderItem={renderOrderItem}
+          estimatedItemSize={150}
+          contentContainerStyle={styles.ordersList}
+          numColumns={4}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 

@@ -33,7 +33,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="orders"
         options={{
           title: 'Orders',
@@ -41,7 +41,7 @@ export default function TabLayout() {
             <History size={size} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="settings"
         options={{

@@ -2,37 +2,32 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import {
   Menu,
-  ShoppingCart,
   LayoutDashboard,
   ReceiptText,
   ShoppingBag,
   Settings,
 } from 'lucide-react-native';
-import { useCart } from '@/context/CartContext';
 import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import BarcodeProductField from '../atoms/BarcodeProductField';
+import { router } from 'expo-router';
 
-interface HeaderProps {
-  onMenuToggle: () => void;
-  onCartPress: () => void;
-  onNavigate: (route: string) => void;
-}
-
-export default function Header({
-  onMenuToggle,
-  onCartPress,
-  onNavigate,
-}: HeaderProps) {
+export default function Header() {
   const styles = useStyleSheet(themedStyle) as any;
   const theme = useTheme();
 
-  const { cartItems } = useCart();
-  const totalItems = useMemo(() => cartItems.length, [cartItems]);
+  const handleOnNavigate = (route: string) => {
+    router.navigate(route as any);
+  };
+
+  const handleOnMenuToggle = () => {};
 
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        <TouchableOpacity onPress={onMenuToggle} style={styles.menuButton}>
+        <TouchableOpacity
+          onPress={handleOnMenuToggle}
+          style={styles.menuButton}
+        >
           <Menu size={24} color={theme['color-basic-700']} />
         </TouchableOpacity>
         <Text style={styles.logo}>StanPOS</Text>
@@ -43,41 +38,30 @@ export default function Header({
       <View style={styles.rightSection}>
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={() => onNavigate('/')}
+          onPress={() => handleOnNavigate('/sell')}
         >
           <LayoutDashboard size={22} color={theme['color-basic-700']} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={() => onNavigate('/orders')}
+          onPress={() => handleOnNavigate('/orders')}
         >
           <ReceiptText size={22} color={theme['color-basic-700']} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={() => onNavigate('/inventory')}
+          onPress={() => handleOnNavigate('/inventory')}
         >
           <ShoppingBag size={22} color={theme['color-basic-700']} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={() => onNavigate('/settings')}
+          onPress={() => handleOnNavigate('/settings')}
         >
           <Settings size={22} color={theme['color-basic-700']} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.cartButton} onPress={onCartPress}>
-          <ShoppingCart size={22} color={theme['color-basic-700']} />
-          {totalItems > 0 && (
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>
-                {totalItems > 99 ? '99+' : totalItems}
-              </Text>
-            </View>
-          )}
         </TouchableOpacity>
       </View>
     </View>

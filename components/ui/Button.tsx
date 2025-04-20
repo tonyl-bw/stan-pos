@@ -7,11 +7,11 @@ import {
 
 export default function Button(props: ButtonProps) {
   const styles = useStyleSheet(themedStyles) as any;
-  return <UIButton {...props} style={styles.button} />;
+  return <UIButton {...props} style={[styles.button, props.style]} />;
 }
 
 const themedStyles = StyleService.create({
   button: {
-    borderRadius: 20,
+    // borderRadius: 12,
   },
 });

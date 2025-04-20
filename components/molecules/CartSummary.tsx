@@ -3,16 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ArrowRight, Trash } from 'lucide-react-native';
 import { useTheme, useStyleSheet, StyleService } from '@ui-kitten/components';
 import { useCart } from '@/context/CartContext';
-
+import { router } from 'expo-router';
+import SummaryLabel from '../atoms/SummaryLabel';
+import Button from '../ui/Button';
 interface CartSummaryProps {
-  onCheckout: () => void;
   onClearCart: () => void;
 }
 
-export default function CartSummary({
-  onCheckout,
-  onClearCart,
-}: CartSummaryProps) {
+export default function CartSummary({ onClearCart }: CartSummaryProps) {
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles) as any;
   const { cartTotal } = useCart();
@@ -20,6 +18,10 @@ export default function CartSummary({
   const tax = useMemo(() => {
     return cartTotal * 0.15;
   }, [cartTotal]);
+
+  const handleOnCheckout = () => {
+    router.navigate('/checkout');
+  };
 
   return (
     <View style={styles.container}>
@@ -32,7 +34,7 @@ export default function CartSummary({
         </View> */}
 
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Tax (15%)</Text>
+          <SummaryLabel label="Tax (15%)" />
           <Text style={styles.summaryValue}>${tax.toFixed(2)}</Text>
         </View>
 
@@ -43,15 +45,23 @@ export default function CartSummary({
       </View>
 
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.clearButton} onPress={onClearCart}>
-          <Trash size={16} color={theme['color-danger-600']} />
-          <Text style={styles.clearButtonText}>Clear</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.checkoutButton} onPress={onCheckout}>
-          <Text style={styles.checkoutButtonText}>Checkout</Text>
-          <ArrowRight size={16} color={theme['text-control-color']} />
-        </TouchableOpacity>
+        <Button
+          appearance="outline"
+          status="danger"
+          onPress={onClearCart}
+          accessoryLeft={() => <Trash size={16} color={theme['color-danger-600']} />}
+        >
+          Clear
+        </Button>
+        <Button
+          onPress={handleOnCheckout}
+          style={styles.checkoutButton}
+          accessoryRight={() => (
+            <ArrowRight size={16} color={theme['text-control-color']} />
+          )}
+        >
+          Checkout
+        </Button>
       </View>
     </View>
   );
@@ -127,20 +137,7 @@ const themedStyles = StyleService.create({
     color: 'color-danger-600',
   },
   checkoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'color-primary-600',
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    borderRadius: 8,
     flex: 1,
     marginLeft: 12,
-  },
-  checkoutButtonText: {
-    marginRight: 8,
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: 'text-control-color',
   },
 });

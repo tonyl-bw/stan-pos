@@ -1,0 +1,38 @@
+{
+  "strict": {
+    "text-font-family": "Inter-Regular",
+    "text-heading-1-font-family": "Inter-ExtraBold",
+    "text-heading-2-font-family": "Inter-ExtraBold",
+    "text-heading-3-font-family": "Inter-ExtraBold",
+    "text-heading-4-font-family": "Inter-ExtraBold",
+    "text-heading-5-font-family": "Inter-ExtraBold",
+    "text-heading-6-font-family": "Inter-ExtraBold",
+    "text-subtitle-1-font-family": "Inter-SemiBold",
+    "text-subtitle-2-font-family": "Inter-SemiBold",
+    "text-paragraph-1-font-family": "Inter-Regular",
+    "text-paragraph-2-font-family": "Inter-Regular",
+    "text-caption-1-font-family": "Inter-Regular",
+    "text-caption-2-font-family": "Inter-SemiBold",
+    "text-label-font-family": "Inter-SemiBold",
+    "border-radius": 10
+  },
+  "components": {
+    "Button": {
+      "appearances": {
+        "filled": {
+          "mapping": {},
+          "variantGroups": {
+            "status": {
+              "basic": {
+                "textFontFamily": "Inter-Medium"
+              },
+              "primary": {
+                "textFontFamily": "Inter-Medium"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
