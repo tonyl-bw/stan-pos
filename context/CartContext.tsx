@@ -7,6 +7,7 @@ import React, {
   useEffect,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DeliveryMethod, PaymentMethod } from '@/types/cart.type';
 
 // Define types for cart items
 export interface CartItem {
@@ -51,6 +52,10 @@ interface CartContextType {
 
   // Checkout
   checkout: (deliveryMethod: string, paymentMethod: string) => Promise<void>;
+  paymentMethod: PaymentMethod;
+  setPaymentMethod: (paymentMethod: PaymentMethod) => void;
+  deliveryMethod: DeliveryMethod;
+  setDeliveryMethod: (deliveryMethod: DeliveryMethod) => void;
 }
 
 // Create the context
@@ -61,6 +66,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [checkoutInProgress, setCheckoutInProgress] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    PaymentMethod.CASH
+  );
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>(
+    DeliveryMethod.DINE_IN
+  );
 
   // Calculate derived values
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -343,6 +355,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         decreaseQuantity,
         clearCart,
         checkout,
+        paymentMethod,
+        setPaymentMethod,
+        deliveryMethod,
+        setDeliveryMethod,
       }}
     >
       {children}

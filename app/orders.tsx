@@ -3,6 +3,8 @@ import { FlashList } from '@shopify/flash-list';
 import { StyleService, useStyleSheet, Text } from '@ui-kitten/components';
 import { OrderStatusBadge } from '@/components/atoms/OrderStatusBadge';
 import Header from '@/components/layout/Header';
+import OrderHistoryItem from '@/components/molecules/OrderHistoryItem';
+import OrderHistoryList from '@/components/organisms/OrderHistoryList';
 
 // Mock data for orders
 const ORDERS = [
@@ -75,13 +77,14 @@ export default function OrdersScreen() {
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.container}>
-        <FlashList
+        <OrderHistoryList />
+        {/* <FlashList
           data={ORDERS}
           renderItem={renderOrderItem}
           estimatedItemSize={150}
           contentContainerStyle={styles.ordersList}
           numColumns={4}
-        />
+        /> */}
       </View>
     </SafeAreaView>
   );
@@ -90,7 +93,7 @@ export default function OrdersScreen() {
 const themedStyles = StyleService.create({
   container: {
     flex: 1,
-    backgroundColor: 'background-basic-color-4',
+    backgroundColor: 'background-basic-color-2',
   },
   ordersList: {
     padding: 16,

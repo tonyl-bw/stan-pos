@@ -4,8 +4,6 @@ import { router } from 'expo-router';
 import {
   CHECKOUT_DELIVERY_METHODS,
   CHECKOUT_PAYMENT_METHODS,
-  DEFAULT_DELIVERY_METHOD,
-  DEFAULT_PAYMENT_METHOD,
 } from '@/constant/checkout.constant';
 import { OptionSection } from '@/components/molecules/OptionSelection';
 import { useCart } from '@/context/CartContext';
@@ -19,22 +17,23 @@ import Button from '@/components/ui/Button';
 import Header from '@/components/layout/Header';
 import { ArrowRight } from 'lucide-react-native';
 import SummaryLabel from '@/components/atoms/SummaryLabel';
+import { PaymentMethod } from '@/types/cart.type';
+import { DeliveryMethod } from '@/types/cart.type';
 
 export default function CheckoutScreen() {
   const styles = useStyleSheet(themedStyles) as any;
   const theme = useTheme();
-  const [paymentMethod, setPaymentMethod] = useState(DEFAULT_PAYMENT_METHOD);
-  const [deliveryMethod, setDeliveryMethod] = useState(DEFAULT_DELIVERY_METHOD);
-
-  const { cartTotal } = useCart();
+  const { cartTotal, paymentMethod, setPaymentMethod, deliveryMethod, setDeliveryMethod } =
+    useCart();
 
   const handleConfirmOrder = () => {
     if (!paymentMethod || !deliveryMethod) {
       // Show error state if methods aren't selected
       return;
     }
+
     // Handle order confirmation
-    router.replace('/orders');
+    router.replace('/checkout-complete');
   };
 
   return (
@@ -46,7 +45,9 @@ export default function CheckoutScreen() {
           title={CHECKOUT_PAYMENT_METHODS.title}
           options={CHECKOUT_PAYMENT_METHODS.options}
           selectedOption={paymentMethod}
-          onOptionSelect={setPaymentMethod}
+          onOptionSelect={(optionId) =>
+            setPaymentMethod(optionId as PaymentMethod)
+          }
         />
 
         {/* Delivery Method */}
@@ -54,7 +55,9 @@ export default function CheckoutScreen() {
           title={CHECKOUT_DELIVERY_METHODS.title}
           options={CHECKOUT_DELIVERY_METHODS.options}
           selectedOption={deliveryMethod}
-          onOptionSelect={setDeliveryMethod}
+          onOptionSelect={(optionId) =>
+            setDeliveryMethod(optionId as DeliveryMethod)
+          }
         />
 
         <View style={styles.summary}>
