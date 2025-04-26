@@ -1,6 +1,6 @@
 import { Card, StyleService, Text, useStyleSheet } from '@ui-kitten/components';
 import { View, useWindowDimensions } from 'react-native';
-import { OrderStatusBadge } from '../atoms/OrderStatusBadge';
+import { OrderStatusBadge } from './OrderStatusBadge';
 
 const BREAKPOINT = 1024;
 const PADDING = 16;

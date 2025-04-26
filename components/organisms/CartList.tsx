@@ -2,8 +2,9 @@ import { FlashList } from '@shopify/flash-list';
 import { StyleSheet } from 'react-native';
 import { useStyleSheet } from '@ui-kitten/components';
 import { useCart } from '@/context/CartContext';
-import { CartListItem } from '@/components/atoms/CartListItem';
-import { CartListEmpty } from '@/components/atoms/CartListEmpty';
+import { CartListItem } from '@/components/molecules/CartListItem';
+import { CartListEmpty } from '@/components/molecules/CartListEmpty';
+
 export default function CartList() {
   const { cartItems } = useCart();
   const styles = useStyleSheet(themedStyles) as any;

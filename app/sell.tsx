@@ -1,14 +1,14 @@
 import Header from '@/components/layout/Header';
-import CategoryList from '@/components/molecules/CategoryList';
+import CategoryList from '@/components/organisms/CategoryList';
 import { ProductProvider } from '@/context/ProductContext';
 import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import { Dimensions, Platform, SafeAreaView, View } from 'react-native';
 import { useState } from 'react';
-import ProductList from '@/components/molecules/ProductList';
-import CartList from '@/components/molecules/CartList';
+import ProductList from '@/components/organisms/ProductList';
+import CartList from '@/components/organisms/CartList';
 import CartSummary from '@/components/molecules/CartSummary';
 import { useCart } from '@/context/CartContext';
-import ProductListItemModal from '@/components/atoms/ProductListItemModal';
+import ProductListItemModal from '@/components/organisms/ProductListItemModal';
 
 export default function SellScreen() {
   const styles = useStyleSheet(themedStyles) as any;

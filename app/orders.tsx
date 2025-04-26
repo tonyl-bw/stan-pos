@@ -1,7 +1,7 @@
 import { SafeAreaView, View } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { StyleService, useStyleSheet, Text } from '@ui-kitten/components';
-import { OrderStatusBadge } from '@/components/atoms/OrderStatusBadge';
+import { OrderStatusBadge } from '@/components/molecules/OrderStatusBadge';
 import Header from '@/components/layout/Header';
 import OrderHistoryItem from '@/components/molecules/OrderHistoryItem';
 import OrderHistoryList from '@/components/organisms/OrderHistoryList';

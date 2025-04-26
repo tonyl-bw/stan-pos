@@ -1,5 +1,4 @@
 import { View, SafeAreaView, Platform } from 'react-native';
-import { useState } from 'react';
 import { router } from 'expo-router';
 import {
   CHECKOUT_DELIVERY_METHODS,
@@ -15,7 +14,7 @@ import {
 } from '@ui-kitten/components';
 import Button from '@/components/ui/Button';
 import Header from '@/components/layout/Header';
-import { ArrowRight } from 'lucide-react-native';
+import { ArrowRight, Split } from 'lucide-react-native';
 import SummaryLabel from '@/components/atoms/SummaryLabel';
 import { PaymentMethod } from '@/types/cart.type';
 import { DeliveryMethod } from '@/types/cart.type';
@@ -23,8 +22,13 @@ import { DeliveryMethod } from '@/types/cart.type';
 export default function CheckoutScreen() {
   const styles = useStyleSheet(themedStyles) as any;
   const theme = useTheme();
-  const { cartTotal, paymentMethod, setPaymentMethod, deliveryMethod, setDeliveryMethod } =
-    useCart();
+  const {
+    cartTotal,
+    paymentMethod,
+    setPaymentMethod,
+    deliveryMethod,
+    setDeliveryMethod,
+  } = useCart();
 
   const handleConfirmOrder = () => {
     if (!paymentMethod || !deliveryMethod) {
@@ -81,6 +85,17 @@ export default function CheckoutScreen() {
       </View>
       <View style={styles.footer}>
         <Button
+          status="danger"
+          appearance="outline"
+          style={{ flex: 1 }}
+          accessoryLeft={() => (
+            <Split size={20} color={theme['color-danger-500']} />
+          )}
+        >
+          Split Bill
+        </Button>
+        <Button
+          style={{ flex: 2 }}
           onPress={handleConfirmOrder}
           disabled={!paymentMethod || !deliveryMethod}
           accessoryRight={() => (
@@ -163,5 +178,7 @@ const themedStyles = StyleService.create({
     backgroundColor: 'background-basic-color-1',
     borderTopWidth: 1,
     borderTopColor: 'border-basic-color-4',
+    gap: 12,
+    flexDirection: 'row',
   },
 });

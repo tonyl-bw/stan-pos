@@ -1,16 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
 import { ProductProvider } from '@/context/ProductContext';
-import ProductList from '@/components/molecules/ProductList';
-import ProductModal from '@/components/atoms/ProductModal';
-import CategoryList from '@/components/molecules/CategoryList';
-import CartList from '@/components/molecules/CartList';
+import ProductList from '@/components/organisms/ProductList';
+import CategoryList from '@/components/organisms/CategoryList';
+import CartList from '@/components/organisms/CartList';
 import { Text, StyleService, useStyleSheet } from '@ui-kitten/components';
 import { useCart } from '@/context/CartContext';
 import Button from '@/components/ui/Button';
 import { router } from 'expo-router';
 import { ProductSearch } from '@/components/atoms/ProductSearch';
-import ProductListItemModal from '@/components/atoms/ProductListItemModal';
+import ProductListItemModal from '@/components/organisms/ProductListItemModal';
 
 export default function ProductsScreen() {
   const { cartTotal } = useCart();
@@ -27,7 +26,7 @@ export default function ProductsScreen() {
           <ProductSearch />
           <CategoryList />
           <ProductList />
-          <ProductModal />
+          <ProductListItemModal />
           <ProductListItemModal />
         </View>
 

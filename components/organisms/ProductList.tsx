@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useProductContext } from '@/context/ProductContext';
-import ProductListEmpty from '../atoms/ProductListEmpty';
-import { Text, useStyleSheet } from '@ui-kitten/components';
-import ProductListItem from '../atoms/ProductListItem';
+import ProductListEmpty from '../molecules/ProductListEmpty';
+import { useStyleSheet } from '@ui-kitten/components';
+import ProductListItem from '../molecules/ProductListItem';
 
 export default function ProductList() {
   const { filteredProducts } = useProductContext();
