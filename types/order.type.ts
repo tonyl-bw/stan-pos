@@ -1,5 +1,6 @@
 // Order model
-interface Order {
+// TODO: Order template
+export interface Order {
   PK: string; // ORDER#{orderId}
   SK: string; // METADATA
   orderId: string;
@@ -25,7 +26,7 @@ interface Order {
 }
 
 // Order item model
-interface OrderItem {
+export interface OrderItem {
   productId: string;
   name: string;
   quantity: number;
@@ -36,7 +37,7 @@ interface OrderItem {
 }
 
 // Order item customization model
-interface OrderItemCustomization {
+export interface OrderItemCustomization {
   inventoryId: string;
   name: string;
   action: 'add' | 'remove' | 'reduce' | 'increase';
@@ -45,7 +46,7 @@ interface OrderItemCustomization {
 }
 
 // Customer model
-interface Customer {
+export interface Customer {
   PK: string; // CUST#{customerId}
   SK: string; // METADATA
   customerId: string;

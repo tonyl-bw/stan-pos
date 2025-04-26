@@ -1,9 +1,5 @@
 import { Tabs } from 'expo-router';
-import {
-  LayoutGrid,
-  Settings,
-  History,
-} from 'lucide-react-native';
+import { LayoutGrid, Settings } from 'lucide-react-native';
 import { useTheme } from '@ui-kitten/components';
 export default function TabLayout() {
   const theme = useTheme();
@@ -28,9 +24,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Sell',
-          tabBarIcon: ({ color, size }) => (
-            <LayoutGrid size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <LayoutGrid size={size} color={color} />,
         }}
       />
       {/* <Tabs.Screen
@@ -46,9 +40,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color, size }) => (
-            <Settings size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
         }}
       />
     </Tabs>

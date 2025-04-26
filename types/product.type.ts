@@ -1,5 +1,6 @@
 // Product model
-interface Product {
+// TODO: Product template
+export interface Product {
   PK: string; // PROD#{productId}
   SK: string; // METADATA
   productId: string;
@@ -17,7 +18,7 @@ interface Product {
 }
 
 // Product category model
-interface ProductCategory {
+export interface ProductCategory {
   PK: string; // CATEGORY#{categoryId}
   SK: string; // METADATA
   categoryId: string;
@@ -29,7 +30,7 @@ interface ProductCategory {
 }
 
 // Product ingredient relationship (used within Product model)
-interface ProductIngredient {
+export interface ProductIngredient {
   ingredientId: string;
   name: string;
   quantityRequired: number;
@@ -44,7 +45,7 @@ interface ProductIngredient {
 }
 
 // Ingredient model
-interface Ingredient {
+export interface Ingredient {
   PK: string; // ING#{ingredientId}
   SK: string; // METADATA
   ingredientId: string;
@@ -68,7 +69,7 @@ interface Ingredient {
 }
 
 // Product-Inventory relationship model (DynamoDB table)
-interface ProductInventory {
+export interface ProductInventory {
   PK: string; // PROD#{productId}
   SK: string; // ING#{ingredientId}
   productId: string;

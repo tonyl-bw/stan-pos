@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { ArrowRight, Trash } from 'lucide-react-native';
 import { useTheme, useStyleSheet, StyleService } from '@ui-kitten/components';
 import { useCart } from '@/context/CartContext';
@@ -56,9 +56,7 @@ export default function CartSummary({ onClearCart }: CartSummaryProps) {
         <Button
           onPress={handleOnCheckout}
           style={styles.checkoutButton}
-          accessoryRight={() => (
-            <ArrowRight size={16} color={theme['text-control-color']} />
-          )}
+          accessoryRight={() => <ArrowRight size={16} color={theme['text-control-color']} />}
         >
           Checkout
         </Button>

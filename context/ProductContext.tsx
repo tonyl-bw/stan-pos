@@ -1,15 +1,8 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { createContext, useState, useContext, ReactNode, useRef, useCallback, useMemo } from 'react';
 import { MOCK_PRODUCTS } from '@/mock/product.mock';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useCart } from './CartContext';
+import { Product, ProductCategory, ProductIngredient } from '@/types/product.type';
 
 // Define the context type
 interface ProductContextType {
@@ -35,27 +28,21 @@ interface ProductContextType {
 }
 
 // Create the context with a default value
-const ProductContext = createContext<ProductContextType>(
-  {} as ProductContextType
-);
+const ProductContext = createContext<ProductContextType>({} as ProductContextType);
 
 // Context provider component
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
   const { addToCart } = useCart();
   // Modal state
   const [visible, setVisible] = useState(false);
-  const handleCloseModal = () => setVisible(false);
+  const handleCloseModal = useCallback(() => setVisible(false), []);
 
   // Create a ref for the bottom sheet modal
   const bottomSheetModalRef = useRef<BottomSheet>(null);
 
-  const [selectedCategory, setSelectedCategory] = useState<
-    ProductCategory['PK'] | 'All'
-  >('All');
+  const [selectedCategory, setSelectedCategory] = useState<ProductCategory['PK'] | 'All'>('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedIngredients, setSelectedIngredients] = useState<
-    ProductIngredient['ingredientId'][]
-  >([]);
+  const [selectedIngredients, setSelectedIngredients] = useState<ProductIngredient['ingredientId'][]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter products based on selected category
@@ -63,16 +50,12 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     let products =
       selectedCategory === 'All'
         ? MOCK_PRODUCTS
-        : MOCK_PRODUCTS.filter((product) =>
-            product.GSI1PK?.includes(selectedCategory)
-          );
+        : MOCK_PRODUCTS.filter((product) => product.GSI1PK?.includes(selectedCategory));
 
     // Apply search filter if there's a search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      products = products.filter((product) =>
-        product.name.toLowerCase().includes(query)
-      );
+      products = products.filter((product) => product.name.toLowerCase().includes(query));
     }
 
     return products;
@@ -83,35 +66,27 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
     if (product.ingredients && product.ingredients.length > 0) {
       setSelectedProduct(product);
       setSelectedIngredients(
-        product.ingredients
-          .filter((ing) => ing.isOptional === false || ing.isDefault)
-          .map((ing) => ing.ingredientId)
+        product.ingredients.filter((ing) => ing.isOptional === false || ing.isDefault).map((ing) => ing.ingredientId),
       );
-
-      // Present the bottom sheet
-      // bottomSheetModalRef.current?.expand();
       setVisible(true);
     } else {
       addToCart(product, selectedIngredients);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Toggle ingredients
   const handleIngredientToggle = useCallback(
     (ingredientId: string) => {
       if (!selectedProduct || !selectedProduct.ingredients) return;
-      const ingredient = selectedProduct.ingredients.find(
-        (i) => i.ingredientId === ingredientId
-      );
+      const ingredient = selectedProduct.ingredients.find((i) => i.ingredientId === ingredientId);
       if (!ingredient || !ingredient.isOptional) return;
 
       setSelectedIngredients((prev) =>
-        prev.includes(ingredientId)
-          ? prev.filter((id) => id !== ingredientId)
-          : [...prev, ingredientId]
+        prev.includes(ingredientId) ? prev.filter((id) => id !== ingredientId) : [...prev, ingredientId],
       );
     },
-    [selectedProduct]
+    [selectedProduct],
   );
 
   // Calculate total price
@@ -154,12 +129,14 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       searchQuery,
       visible,
       handleCloseModal,
-    ]
+      handleProductPress,
+      handleIngredientToggle,
+      calculateTotalPrice,
+      closeProductModal,
+    ],
   );
 
-  return (
-    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
-  );
+  return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };
 
 // Custom hook to use the product context

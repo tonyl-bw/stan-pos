@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { useProductContext } from '@/context/ProductContext';
 import { Text, useStyleSheet } from '@ui-kitten/components';
+import { ProductCategory } from '@/types/product.type';
 
 export default function CategoryListItem(props: { category: ProductCategory }) {
   const { category } = props;
@@ -10,19 +11,13 @@ export default function CategoryListItem(props: { category: ProductCategory }) {
     <Pressable
       style={[
         styles.categoryButton,
-        selectedCategory === category.PK
-          ? styles.categoryButtonActive
-          : styles.categoryButtonInactive,
+        selectedCategory === category.PK ? styles.categoryButtonActive : styles.categoryButtonInactive,
       ]}
       onPress={() => setSelectedCategory(category.PK)}
     >
       <Text
         category="c2"
-        style={[
-          selectedCategory === category.PK
-            ? styles.categoryButtonTextActive
-            : styles.categoryButtonTextInactive,
-        ]}
+        style={[selectedCategory === category.PK ? styles.categoryButtonTextActive : styles.categoryButtonTextInactive]}
       >
         {category.name}
       </Text>

@@ -1,5 +1,6 @@
 // Sales report model
-interface SalesReport {
+// TODO: Sales report template
+export interface SalesReport {
   PK: string; // REPORT#SALES#{dateRange}
   SK: string; // METADATA
   reportId: string;

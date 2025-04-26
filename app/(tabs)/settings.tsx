@@ -1,11 +1,9 @@
 import { View, Text, StyleSheet, Pressable, Switch } from 'react-native';
 import { ChevronRight, Store, Receipt, Bell, Moon } from 'lucide-react-native';
-import { useSettings } from '@/context/SettingContext';
 import SettingGroupWrapper from '@/components/molecules/SettingGroupWrapper';
 import SettingDarkModeSwitch from '@/components/atoms/SettingDarkModeSwitch';
 
 export default function SettingsScreen() {
-  const { isDarkMode, toggleDarkMode } = useSettings();
   const settingsGroups = [
     {
       title: 'Business Settings',
@@ -31,12 +29,7 @@ export default function SettingsScreen() {
               <Text style={styles.settingsItemLabel}>{item.label}</Text>
             </View>
             {item.hasChevron && <ChevronRight size={20} color="#8E8E93" />}
-            {item.hasSwitch && (
-              <Switch
-                trackColor={{ false: '#E5E5EA', true: '#34C759' }}
-                thumbColor="#FFFFFF"
-              />
-            )}
+            {item.hasSwitch && <Switch trackColor={{ false: '#E5E5EA', true: '#34C759' }} thumbColor="#FFFFFF" />}
           </Pressable>
         ))}
       </View>

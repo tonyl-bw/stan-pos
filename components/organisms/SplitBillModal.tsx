@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  TouchableOpacity,
-  TextInput,
-  Platform,
-} from 'react-native';
+import { View, Text, Modal, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { X, CreditCard, Wallet } from 'lucide-react-native';
 import { StyleService, useTheme, useStyleSheet } from '@ui-kitten/components';
 
@@ -33,11 +25,7 @@ export default function SplitBillModal({
 
   const handleAddPayment = () => {
     const paymentAmount = parseFloat(amount);
-    if (
-      isNaN(paymentAmount) ||
-      paymentAmount <= 0 ||
-      paymentAmount > remainingAmount
-    ) {
+    if (isNaN(paymentAmount) || paymentAmount <= 0 || paymentAmount > remainingAmount) {
       return;
     }
 
@@ -53,12 +41,7 @@ export default function SplitBillModal({
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
@@ -72,15 +55,11 @@ export default function SplitBillModal({
             <View style={styles.amountInfo}>
               <View style={styles.amountRow}>
                 <Text style={styles.amountLabel}>Total Amount</Text>
-                <Text style={styles.amountValue}>
-                  ${totalAmount.toFixed(2)}
-                </Text>
+                <Text style={styles.amountValue}>${totalAmount.toFixed(2)}</Text>
               </View>
               <View style={styles.amountRow}>
                 <Text style={styles.amountLabel}>Remaining</Text>
-                <Text style={styles.remainingValue}>
-                  ${remainingAmount.toFixed(2)}
-                </Text>
+                <Text style={styles.remainingValue}>${remainingAmount.toFixed(2)}</Text>
               </View>
             </View>
 
@@ -100,63 +79,32 @@ export default function SplitBillModal({
               <Text style={styles.methodTitle}>Payment Method</Text>
               <View style={styles.methodOptions}>
                 <TouchableOpacity
-                  style={[
-                    styles.methodButton,
-                    paymentMethod === 'card' && styles.methodButtonSelected,
-                  ]}
+                  style={[styles.methodButton, paymentMethod === 'card' && styles.methodButtonSelected]}
                   onPress={() => setPaymentMethod('card')}
                 >
                   <CreditCard
                     size={24}
-                    color={
-                      paymentMethod === 'card'
-                        ? theme['text-primary-color']
-                        : theme['text-hint-color']
-                    }
+                    color={paymentMethod === 'card' ? theme['text-primary-color'] : theme['text-hint-color']}
                   />
-                  <Text
-                    style={[
-                      styles.methodText,
-                      paymentMethod === 'card' && styles.methodTextSelected,
-                    ]}
-                  >
-                    Card
-                  </Text>
+                  <Text style={[styles.methodText, paymentMethod === 'card' && styles.methodTextSelected]}>Card</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[
-                    styles.methodButton,
-                    paymentMethod === 'cash' && styles.methodButtonSelected,
-                  ]}
+                  style={[styles.methodButton, paymentMethod === 'cash' && styles.methodButtonSelected]}
                   onPress={() => setPaymentMethod('cash')}
                 >
                   <Wallet
                     size={24}
-                    color={
-                      paymentMethod === 'cash'
-                        ? theme['text-primary-color']
-                        : theme['text-hint-color']
-                    }
+                    color={paymentMethod === 'cash' ? theme['text-primary-color'] : theme['text-hint-color']}
                   />
-                  <Text
-                    style={[
-                      styles.methodText,
-                      paymentMethod === 'cash' && styles.methodTextSelected,
-                    ]}
-                  >
-                    Cash
-                  </Text>
+                  <Text style={[styles.methodText, paymentMethod === 'cash' && styles.methodTextSelected]}>Cash</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
 
           <View style={styles.modalFooter}>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={handleAddPayment}
-            >
+            <TouchableOpacity style={styles.addButton} onPress={handleAddPayment}>
               <Text style={styles.addButtonText}>Add Payment</Text>
             </TouchableOpacity>
           </View>
@@ -181,8 +129,7 @@ const themedStyles = StyleService.create({
     overflow: 'hidden',
     ...Platform.select({
       web: {
-        boxShadow:
-          '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
       },
       default: {
         shadowColor: '#000',

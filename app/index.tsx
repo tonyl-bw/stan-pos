@@ -12,7 +12,7 @@ import ProductListItemModal from '@/components/organisms/ProductListItemModal';
 
 export default function SellScreen() {
   const styles = useStyleSheet(themedStyles) as any;
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, _setIsDrawerOpen] = useState(false);
 
   // Responsive layout
   const isLargeScreen =

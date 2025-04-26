@@ -1,5 +1,5 @@
-// Inventory model
-interface Inventory {
+// TODO: Inventory template
+export interface Inventory {
   PK: string; // INV#{inventoryId}
   SK: string; // METADATA
   inventoryId: string;
@@ -23,7 +23,7 @@ interface Inventory {
 }
 
 // Product-Inventory relationship model
-interface ProductInventory {
+export interface ProductInventory {
   PK: string; // PROD#{productId}
   SK: string; // INV#{inventoryId}
   productId: string;
@@ -42,7 +42,7 @@ interface ProductInventory {
 }
 
 // Inventory transaction model
-interface InventoryTransaction {
+export interface InventoryTransaction {
   PK: string; // INV#{inventoryId}
   SK: string; // TXN#{timestamp}
   inventoryId: string;
@@ -57,7 +57,7 @@ interface InventoryTransaction {
 }
 
 // Supplier model
-interface Supplier {
+export interface Supplier {
   PK: string; // SUP#{supplierId}
   SK: string; // METADATA
   supplierId: string;

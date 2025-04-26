@@ -12,11 +12,10 @@ import ProductListItemModal from '@/components/organisms/ProductListItemModal';
 
 export default function SellScreen() {
   const styles = useStyleSheet(themedStyles) as any;
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, _setIsDrawerOpen] = useState(false);
 
   // Responsive layout
-  const isLargeScreen =
-    Platform.OS === 'web' || Dimensions.get('window').width >= 1024;
+  const isLargeScreen = Platform.OS === 'web' || Dimensions.get('window').width >= 1024;
 
   const { clearCart } = useCart();
 
@@ -26,12 +25,7 @@ export default function SellScreen() {
         <Header />
         <View style={styles.content}>
           {/* Left panel */}
-          <View
-            style={[
-              styles.leftPanel,
-              !isLargeScreen && isDrawerOpen && styles.hiddenOnMobile,
-            ]}
-          >
+          <View style={[styles.leftPanel, !isLargeScreen && isDrawerOpen && styles.hiddenOnMobile]}>
             <CategoryList />
             <ProductList />
             {/* Product list item modal */}

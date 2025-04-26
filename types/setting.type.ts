@@ -1,5 +1,6 @@
 // Settings model
-interface Setting {
+// TODO: Setting template
+export interface Setting {
   PK: string; // SETTING#{settingId}
   SK: string; // METADATA
   settingId: string;
@@ -12,7 +13,7 @@ interface Setting {
 }
 
 // Audit log model
-interface AuditLog {
+export interface AuditLog {
   PK: string; // AUDIT#{timestamp}
   SK: string; // USER#{userId}
   timestamp: string; // ISO date

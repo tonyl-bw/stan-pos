@@ -1,14 +1,8 @@
 import { View } from 'react-native';
-import {
-  Text,
-  StyleService,
-  useStyleSheet,
-  useTheme,
-} from '@ui-kitten/components';
+import { Text, StyleService, useStyleSheet } from '@ui-kitten/components';
 
 export function CartListEmpty() {
   const styles = useStyleSheet(themedStyles) as any;
-  const theme = useTheme();
 
   return (
     <View style={styles.container}>

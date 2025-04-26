@@ -1,12 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import {
-  Text,
-  Card,
-  useTheme,
-  useStyleSheet,
-  StyleService,
-} from '@ui-kitten/components';
+import { View, TouchableOpacity, Platform } from 'react-native';
+import { Text, useTheme, useStyleSheet, StyleService } from '@ui-kitten/components';
 import { LucideIcon } from 'lucide-react-native';
 
 interface Option {
@@ -22,12 +16,7 @@ interface OptionSectionProps {
   onOptionSelect: (optionId: string) => void;
 }
 
-export const OptionSection: React.FC<OptionSectionProps> = ({
-  title,
-  options,
-  selectedOption,
-  onOptionSelect,
-}) => {
+export const OptionSection: React.FC<OptionSectionProps> = ({ title, options, selectedOption, onOptionSelect }) => {
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles) as any;
   return (
@@ -41,26 +30,16 @@ export const OptionSection: React.FC<OptionSectionProps> = ({
           return (
             <TouchableOpacity
               key={option.id}
-              style={[
-                styles.optionCard,
-                selectedOption === option.id && styles.optionSelected,
-              ]}
+              style={[styles.optionCard, selectedOption === option.id && styles.optionSelected]}
               onPress={() => onOptionSelect(option.id)}
             >
               <IconComponent
                 size={24}
-                color={
-                  selectedOption === option.id
-                    ? theme['text-primary-color']
-                    : theme['text-hint-color']
-                }
+                color={selectedOption === option.id ? theme['text-primary-color'] : theme['text-hint-color']}
               />
               <Text
                 category="p1"
-                style={[
-                  styles.optionText,
-                  selectedOption === option.id && styles.optionTextSelected,
-                ]}
+                style={[styles.optionText, selectedOption === option.id && styles.optionTextSelected]}
               >
                 {option.label}
               </Text>

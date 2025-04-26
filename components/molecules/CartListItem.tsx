@@ -1,23 +1,14 @@
 import { Minus, Plus, Trash2 } from 'lucide-react-native';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text, useStyleSheet, useTheme } from '@ui-kitten/components';
-import {
-  useCart,
-  CartItem,
-  CartItemCustomization,
-} from '@/context/CartContext';
+import { useCart, CartItem, CartItemCustomization } from '@/context/CartContext';
 
 interface CartListItemProps {
   item: CartItem;
 }
 
 export function CartListItem({ item }: CartListItemProps) {
-  const {
-    checkoutInProgress,
-    decreaseQuantity,
-    increaseQuantity,
-    removeFromCart,
-  } = useCart();
+  const { decreaseQuantity, increaseQuantity, removeFromCart } = useCart();
   const styles = useStyleSheet(themedStyles) as any;
   const theme = useTheme();
 
@@ -37,19 +28,13 @@ export function CartListItem({ item }: CartListItemProps) {
         {item.notes && <Text style={styles.itemNotes}>Note: {item.notes}</Text>}
 
         <View style={styles.quantityContainer}>
-          <TouchableOpacity
-            style={styles.quantityButton}
-            onPress={() => decreaseQuantity(item.id)}
-          >
+          <TouchableOpacity style={styles.quantityButton} onPress={() => decreaseQuantity(item.id)}>
             <Minus size={14} color={theme['text-basic-color']} />
           </TouchableOpacity>
 
           <Text style={styles.quantity}>{item.quantity}</Text>
 
-          <TouchableOpacity
-            style={styles.quantityButton}
-            onPress={() => increaseQuantity(item.id)}
-          >
+          <TouchableOpacity style={styles.quantityButton} onPress={() => increaseQuantity(item.id)}>
             <Plus size={14} color={theme['text-basic-color']} />
           </TouchableOpacity>
         </View>
@@ -60,26 +45,19 @@ export function CartListItem({ item }: CartListItemProps) {
       {/* Item customizations */}
       {item.customizations && item.customizations.length > 0 && (
         <View style={styles.customizationContainer}>
-          {item.customizations.map(
-            (customization: CartItemCustomization, index) => (
-              <Text key={index} style={styles.customizationText}>
-                {customization.action === 'remove' ? 'No ' : '+ '}
-                {customization.name}
-                {customization.additionalCost > 0
-                  ? ` (+$${customization.additionalCost.toFixed(2)})`
-                  : ''}
-              </Text>
-            )
-          )}
+          {item.customizations.map((customization: CartItemCustomization, index) => (
+            <Text key={index} style={styles.customizationText}>
+              {customization.action === 'remove' ? 'No ' : '+ '}
+              {customization.name}
+              {customization.additionalCost > 0 ? ` (+$${customization.additionalCost.toFixed(2)})` : ''}
+            </Text>
+          ))}
         </View>
       )}
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.removeButton}
-          onPress={() => removeFromCart(item.id)}
-        >
+        <TouchableOpacity style={styles.removeButton} onPress={() => removeFromCart(item.id)}>
           <Trash2 size={14} color={theme['color-basic-600']} />
           <Text category="p1" style={styles.removeText}>
             Remove
