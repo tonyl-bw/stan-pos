@@ -1,13 +1,7 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DeliveryMethod, PaymentMethod } from '@/types/cart.type';
+import { Product, ProductIngredient } from '@/types/product.type';
 
 // Define types for cart items
 export interface CartItem {
@@ -38,22 +32,24 @@ interface CartContextType {
   isCartEmpty: boolean;
   checkoutInProgress: boolean;
   isLoading: boolean;
+  isSplitBill: boolean;
+  splitBillPayments: { method: PaymentMethod; amount: number }[];
+  remainingAmount: number;
 
   // Actions
-  addToCart: (
-    product: Product,
-    customizations: ProductIngredient['ingredientId'][],
-    notes?: string
-  ) => void;
+  addToCart: (product: Product, customizations: ProductIngredient['ingredientId'][], notes?: string) => void;
   removeFromCart: (cartItemId: string) => void;
   increaseQuantity: (cartItemId: string) => void;
   decreaseQuantity: (cartItemId: string) => void;
   clearCart: () => Promise<void>;
+  handleOnSplitBillChange: (isSplitBill: boolean) => void;
+  addSplitBillPayment: (payment: { method: PaymentMethod; amount: number }) => void;
+  clearSplitBillPayments: () => void;
 
   // Checkout
   checkout: (deliveryMethod: string, paymentMethod: string) => Promise<void>;
-  paymentMethod: PaymentMethod;
-  setPaymentMethod: (paymentMethod: PaymentMethod) => void;
+  paymentMethods: PaymentMethod[];
+  handleOnPaymentMethodChange: (paymentMethod: PaymentMethod) => void;
   deliveryMethod: DeliveryMethod;
   setDeliveryMethod: (deliveryMethod: DeliveryMethod) => void;
 }
@@ -67,17 +63,49 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [checkoutInProgress, setCheckoutInProgress] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
-    PaymentMethod.CASH
-  );
-  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>(
-    DeliveryMethod.DINE_IN
-  );
+  const [isSplitBill, setIsSplitBill] = useState(false);
+  const [splitBillPayments, setSplitBillPayments] = useState<{ method: PaymentMethod; amount: number }[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([PaymentMethod.CASH]);
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>(DeliveryMethod.DINE_IN);
+
+  // Add split bill payment
+  const addSplitBillPayment = useCallback((payment: { method: PaymentMethod; amount: number }) => {
+    setIsSplitBill(true);
+    setSplitBillPayments((prev) => [...prev, payment]);
+  }, []);
+
+  // Clear split bill payments
+  const clearSplitBillPayments = useCallback(() => {
+    setSplitBillPayments([]);
+  }, []);
+
+  // Payment methods
+  const handleOnPaymentMethodChange = useCallback((paymentMethod: PaymentMethod) => {
+    if (isSplitBill) {
+      setPaymentMethods((prevMethods) => [...prevMethods, paymentMethod]);
+    } else {
+      setPaymentMethods([paymentMethod]);
+    }
+  }, [isSplitBill]);
+
+  const handleOnSplitBillChange = useCallback((isSplitBill: boolean) => {
+    setIsSplitBill(isSplitBill);
+    if (!isSplitBill) {
+      clearSplitBillPayments();
+    }
+  }, [clearSplitBillPayments]);
 
   // Calculate derived values
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce((total, item) => total + item.subtotal, 0);
   const isCartEmpty = cartItems.length === 0;
+
+  // Calculate remaining amount for split bill
+  const remainingAmount = useMemo(() => {
+    if (!isSplitBill) return cartTotal;
+    const paidAmount = splitBillPayments.reduce((total, payment) => total + payment.amount, 0);
+    return cartTotal - paidAmount;
+  }, [cartTotal, isSplitBill, splitBillPayments]);
 
   // Load cart from AsyncStorage on initial load
   useEffect(() => {
@@ -102,10 +130,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const saveCart = async () => {
       try {
-        await AsyncStorage.setItem(
-          'restaurantPosCart',
-          JSON.stringify(cartItems)
-        );
+        await AsyncStorage.setItem('restaurantPosCart', JSON.stringify(cartItems));
       } catch (error) {
         console.error('Failed to save cart:', error);
       }
@@ -118,10 +143,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [cartItems, isLoading]);
 
   // Helper to calculate the price of customizations
-  const calculateCustomizationsPrice = (
-    product: Product,
-    selectedIngredients: ProductIngredient['ingredientId'][]
-  ) => {
+  const calculateCustomizationsPrice = (product: Product, selectedIngredients: ProductIngredient['ingredientId'][]) => {
     if (!product.ingredients) return 0;
 
     let customizationPrice = 0;
@@ -131,11 +153,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       const isSelected = selectedIngredients.includes(ingredient.ingredientId);
 
       // If the ingredient is optional and selected, and has additional cost
-      if (
-        ingredient.isOptional &&
-        isSelected &&
-        ingredient.additionalCost > 0
-      ) {
+      if (ingredient.isOptional && isSelected && ingredient.additionalCost > 0) {
         // If ingredient isn't default but is selected, add its cost
         if (!ingredient.isDefault) {
           customizationPrice += ingredient.additionalCost;
@@ -151,7 +169,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Transform selected ingredients into customization objects
   const createCustomizationsFromSelectedIngredients = (
     product: Product,
-    selectedIngredients: ProductIngredient['ingredientId'][]
+    selectedIngredients: ProductIngredient['ingredientId'][],
   ): CartItemCustomization[] => {
     if (!product.ingredients) return [];
 
@@ -186,40 +204,21 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   // Add a product to cart
   const addToCart = useCallback(
-    (
-      product: Product,
-      selectedIngredients: ProductIngredient['ingredientId'][],
-      notes?: string
-    ) => {
-      console.log('product', product);
-      console.log('selectedIngredients', selectedIngredients);
-      const customizations = createCustomizationsFromSelectedIngredients(
-        product,
-        selectedIngredients
-      );
+    (product: Product, selectedIngredients: ProductIngredient['ingredientId'][], notes?: string) => {
+      const customizations = createCustomizationsFromSelectedIngredients(product, selectedIngredients);
 
-      const customizationPrice = calculateCustomizationsPrice(
-        product,
-        selectedIngredients
-      );
+      const customizationPrice = calculateCustomizationsPrice(product, selectedIngredients);
       const itemPrice = product.price + customizationPrice;
 
       // Create a unique ID for this cart item based on product and customizations
       const customizationKey =
-        customizations.length > 0
-          ? '-' +
-            customizations.map((c) => `${c.ingredientId}:${c.action}`).join('-')
-          : '';
+        customizations.length > 0 ? '-' + customizations.map((c) => `${c.ingredientId}:${c.action}`).join('-') : '';
 
-      const itemId = `${product.productId}${customizationKey}${
-        notes ? '-' + notes : ''
-      }`;
+      const itemId = `${product.productId}${customizationKey}${notes ? '-' + notes : ''}`;
 
       setCartItems((prevItems) => {
         // Check if this exact item is already in the cart
-        const existingItemIndex = prevItems.findIndex(
-          (item) => item.id === itemId
-        );
+        const existingItemIndex = prevItems.findIndex((item) => item.id === itemId);
 
         if (existingItemIndex >= 0) {
           // Update existing item
@@ -251,14 +250,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         }
       });
     },
-    []
+    [],
   );
 
   // Remove item from cart
   const removeFromCart = useCallback((cartItemId: string) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.id !== cartItemId)
-    );
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== cartItemId));
   }, []);
 
   // Increase item quantity
@@ -337,7 +334,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         throw error;
       }
     },
-    [cartItems, cartTotal, clearCart, isCartEmpty]
+    [cartItems, cartTotal, clearCart, isCartEmpty],
   );
 
   return (
@@ -355,10 +352,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         decreaseQuantity,
         clearCart,
         checkout,
-        paymentMethod,
-        setPaymentMethod,
+        paymentMethods,
+        handleOnPaymentMethodChange,
         deliveryMethod,
         setDeliveryMethod,
+        isSplitBill,
+        handleOnSplitBillChange,
+        splitBillPayments,
+        addSplitBillPayment,
+        clearSplitBillPayments,
+        remainingAmount,
       }}
     >
       {children}

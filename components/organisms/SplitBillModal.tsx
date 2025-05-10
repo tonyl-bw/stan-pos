@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, TextInput, Platform } from 'react-native';
-import { X, CreditCard, Wallet } from 'lucide-react-native';
-import { StyleService, useTheme, useStyleSheet } from '@ui-kitten/components';
+import { View, Modal, TouchableOpacity, Platform } from 'react-native';
+import { X } from 'lucide-react-native';
+import { StyleService, useTheme, useStyleSheet, Text, Input } from '@ui-kitten/components';
+import { CHECKOUT_PAYMENT_METHODS } from '@/constant/checkout.constant';
+import { PaymentMethod } from '@/types/cart.type';
+import OptionSelectionItem from '../molecules/OptionSelectionItem';
 
 interface SplitBillModalProps {
   visible: boolean;
   onClose: () => void;
-  onAddPayment: (payment: { method: 'card' | 'cash'; amount: number }) => void;
+  onAddPayment: (payment: { method: PaymentMethod; amount: number }) => void;
   remainingAmount: number;
   totalAmount: number;
 }
@@ -21,7 +24,7 @@ export default function SplitBillModal({
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles) as any;
   const [amount, setAmount] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.CASH);
 
   const handleAddPayment = () => {
     const paymentAmount = parseFloat(amount);
@@ -36,7 +39,7 @@ export default function SplitBillModal({
 
     // Reset form
     setAmount('');
-    setPaymentMethod('card');
+    setPaymentMethod(PaymentMethod.CASH);
     onClose();
   };
 
@@ -65,40 +68,38 @@ export default function SplitBillModal({
 
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Payment Amount</Text>
-              <TextInput
-                style={styles.input}
-                value={amount}
-                onChangeText={setAmount}
-                keyboardType="decimal-pad"
-                placeholder="Enter amount"
-                placeholderTextColor={theme['text-hint-color']}
-              />
+              <View style={styles.inputWrapper}>
+                <Input
+                  style={{ flex: 1 }}
+                  value={amount}
+                  onChangeText={setAmount}
+                  keyboardType="decimal-pad"
+                  placeholder="Enter amount"
+                  placeholderTextColor={theme['text-hint-color']}
+                  inputMode="decimal"
+                />
+                <TouchableOpacity style={styles.inputCurrency} onPress={() => setAmount(remainingAmount.toString())}>
+                  <View>
+                    <Text style={styles.inputCurrencyText} category="label">
+                      max
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
 
+            {/* Payment Method */}
             <View style={styles.methodContainer}>
               <Text style={styles.methodTitle}>Payment Method</Text>
               <View style={styles.methodOptions}>
-                <TouchableOpacity
-                  style={[styles.methodButton, paymentMethod === 'card' && styles.methodButtonSelected]}
-                  onPress={() => setPaymentMethod('card')}
-                >
-                  <CreditCard
-                    size={24}
-                    color={paymentMethod === 'card' ? theme['text-primary-color'] : theme['text-hint-color']}
+                {CHECKOUT_PAYMENT_METHODS.options.map((option) => (
+                  <OptionSelectionItem
+                    key={option.id}
+                    option={option}
+                    selectedOption={paymentMethod}
+                    onOptionSelect={(option) => setPaymentMethod(option as unknown as PaymentMethod)}
                   />
-                  <Text style={[styles.methodText, paymentMethod === 'card' && styles.methodTextSelected]}>Card</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.methodButton, paymentMethod === 'cash' && styles.methodButtonSelected]}
-                  onPress={() => setPaymentMethod('cash')}
-                >
-                  <Wallet
-                    size={24}
-                    color={paymentMethod === 'cash' ? theme['text-primary-color'] : theme['text-hint-color']}
-                  />
-                  <Text style={[styles.methodText, paymentMethod === 'cash' && styles.methodTextSelected]}>Cash</Text>
-                </TouchableOpacity>
+                ))}
               </View>
             </View>
           </View>
@@ -161,7 +162,8 @@ const themedStyles = StyleService.create({
   },
   amountInfo: {
     backgroundColor: 'background-basic-color-1',
-    padding: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
     borderRadius: 8,
     marginBottom: 24,
   },
@@ -195,16 +197,6 @@ const themedStyles = StyleService.create({
     color: 'text-hint-color',
     marginBottom: 8,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'border-basic-color-4',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    fontFamily: 'Inter-Regular',
-    color: 'text-basic-color',
-  },
   methodContainer: {
     marginBottom: 24,
   },
@@ -217,30 +209,6 @@ const themedStyles = StyleService.create({
   methodOptions: {
     flexDirection: 'row',
     gap: 12,
-  },
-  methodButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    borderRadius: 8,
-    backgroundColor: 'background-basic-color-1',
-    borderWidth: 1,
-    borderColor: 'border-basic-color-4',
-    gap: 8,
-  },
-  methodButtonSelected: {
-    backgroundColor: 'background-basic-color-1',
-    borderColor: 'border-basic-color-4',
-  },
-  methodText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: 'text-hint-color',
-  },
-  methodTextSelected: {
-    color: 'text-primary-color',
   },
   modalFooter: {
     padding: 16,
@@ -257,5 +225,21 @@ const themedStyles = StyleService.create({
     fontFamily: 'Inter-SemiBold',
     fontSize: 16,
     color: 'text-control-color',
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputCurrency: {
+    position: 'absolute',
+    right: 4,
+    padding: 8,
+    borderRadius: 8,
+    // backgroundColor: 'background-basic-color-1',
+  },
+  inputCurrencyText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: 'text-primary-color',
   },
 });

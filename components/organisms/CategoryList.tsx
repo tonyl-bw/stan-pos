@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { MOCK_CATEGORIES } from '@/mock/category.mock';
-import CategoryListItem from '../atoms/CategoryListItem';
+import CategoryListItem from '../molecules/CategoryListItem';
 import { useStyleSheet } from '@ui-kitten/components';
 
 export default function CategoryList() {

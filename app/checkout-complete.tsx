@@ -1,12 +1,6 @@
 import Header from '@/components/layout/Header';
 import Button from '@/components/ui/Button';
-import {
-  Card,
-  StyleService,
-  Text,
-  useStyleSheet,
-  useTheme,
-} from '@ui-kitten/components';
+import { Card, StyleService, Text, useStyleSheet, useTheme } from '@ui-kitten/components';
 import { ArrowLeft, Clock, Printer, Receipt, UtensilsCrossed } from 'lucide-react-native';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
@@ -25,7 +19,7 @@ export default function CheckoutCompleteScreen() {
   const styles = useStyleSheet(themedStyles) as any;
   const theme = useTheme();
 
-  const { cartItems, paymentMethod, deliveryMethod, cartTotal } = useCart();
+  const { cartItems, paymentMethods, deliveryMethod, cartTotal, isSplitBill, splitBillPayments } = useCart();
 
   const handleBackToSales = () => {
     router.navigate('/sell');
@@ -45,9 +39,7 @@ export default function CheckoutCompleteScreen() {
           </Text>
           <View style={styles.timestamp}>
             <Clock size={16} color={theme['color-basic-700']} />
-            <Text style={styles.timestampText}>
-              {new Date(mockOrder.timestamp).toLocaleString()}
-            </Text>
+            <Text style={styles.timestampText}>{new Date(mockOrder.timestamp).toLocaleString()}</Text>
           </View>
         </View>
 
@@ -69,11 +61,7 @@ export default function CheckoutCompleteScreen() {
                       {item.customizations.length > 0 && (
                         <View style={styles.orderItemCustomizations}>
                           {item.customizations.map((customization) => (
-                            <Text
-                              category="p2"
-                              style={styles.orderItemCustomization}
-                              key={customization.ingredientId}
-                            >
+                            <Text category="p2" style={styles.orderItemCustomization} key={customization.ingredientId}>
                               {customization.name}
                             </Text>
                           ))}
@@ -81,9 +69,7 @@ export default function CheckoutCompleteScreen() {
                       )}
                     </View>
                   </View>
-                  <Text category="s1">
-                    ${(item.price * item.quantity).toFixed(2)}
-                  </Text>
+                  <Text category="s1">${(item.price * item.quantity).toFixed(2)}</Text>
                 </View>
               ))}
             </View>
@@ -98,13 +84,30 @@ export default function CheckoutCompleteScreen() {
               <View style={styles.paymentDetailsContainer}>
                 <View style={styles.paymentMethodContainer}>
                   <Receipt size={20} color={theme['color-basic-700']} />
-                  <Text category="s2">Paid by {paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)}</Text>
+                  <Text category="s2">
+                    {isSplitBill
+                      ? `Split Bill (${splitBillPayments.length} payments)`
+                      : `Paid by ${paymentMethods[0].charAt(0).toUpperCase() + paymentMethods[0].slice(1)}`}
+                  </Text>
                 </View>
                 <View style={styles.paymentMethodContainer}>
                   <UtensilsCrossed size={20} color={theme['color-basic-700']} />
                   <Text category="s2">Type: {deliveryMethod.charAt(0).toUpperCase() + deliveryMethod.slice(1)}</Text>
                 </View>
               </View>
+              {isSplitBill && (
+                <View style={styles.splitBillPayments}>
+                  {splitBillPayments.map((payment, index) => (
+                    <View key={index} style={styles.splitBillPayment}>
+                      <View style={styles.splitBillPaymentInfo}>
+                        <Receipt size={16} color={theme['color-basic-700']} />
+                        <Text category="s2">{payment.method.charAt(0).toUpperCase() + payment.method.slice(1)}</Text>
+                      </View>
+                      <Text category="s2">${payment.amount.toFixed(2)}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
               <View style={styles.totalAmountContainer}>
                 <Text category="s1" style={styles.totalAmountLabel}>
                   Total
@@ -123,18 +126,14 @@ export default function CheckoutCompleteScreen() {
           onPress={handleBackToSales}
           status="basic"
           size="large"
-          accessoryLeft={
-            <ArrowLeft size={16} color={theme['color-basic-700']} />
-          }
+          accessoryLeft={<ArrowLeft size={16} color={theme['color-basic-700']} />}
         >
           Back to Sales
         </Button>
         <Button
           style={styles.footerButton}
           size="large"
-          accessoryLeft={
-            <Printer size={16} color={theme['text-control-color']} />
-          }
+          accessoryLeft={<Printer size={16} color={theme['text-control-color']} />}
         >
           Print Receipt
         </Button>
@@ -227,6 +226,20 @@ const themedStyles = StyleService.create({
     gap: 8,
   },
   paymentDetailsContainer: {
+    gap: 8,
+  },
+  splitBillPayments: {
+    marginTop: 16,
+    gap: 8,
+  },
+  splitBillPayment: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  splitBillPaymentInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
 });
